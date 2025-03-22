@@ -1,0 +1,23 @@
+{
+  "name": "projeto-senactech-backend",
+  "version": "1.0.0",
+  "description": "Backend for the GachaLife project developed with Node.js and Express.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "jsonwebtoken": "^8.5.1",
+    "dotenv": "^10.0.0",
+    "cors": "^2.8.5",
+    "body-parser": "^1.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "author": "Seu Nome",
+  "license": "ISC"
+}
