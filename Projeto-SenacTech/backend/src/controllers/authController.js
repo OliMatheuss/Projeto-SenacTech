@@ -1,7 +1,7 @@
 // backend/src/controllers/authController.js
 const Usuario = require('../models/usuarioModel');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 
 // Função para registrar um novo usuário
