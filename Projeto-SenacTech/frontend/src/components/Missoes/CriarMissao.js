@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import missoesService from '../../../services/missoesService';
+import missoesService from '../../services/missoesService';
 
 const CriarMissao = () => {
     const [descricao, setDescricao] = useState('');

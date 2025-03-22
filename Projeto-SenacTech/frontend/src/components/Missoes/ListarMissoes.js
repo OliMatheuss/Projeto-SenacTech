@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { listarMissoes } from '../../services/missoesService';
+import missoesService from '../../services/missoesService';
 
 const ListarMissoes = () => {
     const [missoes, setMissoes] = useState([]);
@@ -7,8 +6,8 @@ const ListarMissoes = () => {
     useEffect(() => {
         const fetchMissoes = async () => {
             try {
-                const response = await listarMissoes();
-                setMissoes(response.data);
+                const response = await missoesService.listarMissoes(); // Use o objeto missoesService
+                setMissoes(response);
             } catch (error) {
                 console.error("Erro ao listar missões:", error);
             }
