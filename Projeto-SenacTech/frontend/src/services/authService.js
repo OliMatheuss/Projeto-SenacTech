@@ -11,18 +11,22 @@ const register = async (username, email, password) => {
     });
     return response.data;
 };
-
-const login = async (email, password) => {
-    const response = await axios.post(API_URL + 'login', {
-        email,
-        password,
-    });
-    if (response.data.token) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+const login = async (email, senha) => {
+    try {
+        const response = await axios.post(API_URL + 'login', {
+            email,
+            senha,
+        });
+        console.log('Resposta da API:', response.data); // Verifique o que está sendo retornado
+        if (response.data.token) {
+            localStorage.setItem('user', JSON.stringify(response.data));
+        }
+        return response.data;
+    } catch (error) {
+        console.error('Erro na requisição:', error.response?.data || error.message);
+        throw error;
     }
-    return response.data;
 };
-
 const logout = () => {
     localStorage.removeItem('user');
 };

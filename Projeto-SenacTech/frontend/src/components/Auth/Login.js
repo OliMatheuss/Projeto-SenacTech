@@ -1,27 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import authService from '../../services/authService';
+import AuthContext from '../../contexts/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [error, setError] = useState('');
     const history = useHistory();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!email || !senha) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
         try {
-            await authService.login({ email, senha });
+            const data = await authService.login(email, senha);
+            login(data); // Salva o estado do usuário no contexto
             history.push('/dashboard');
-        } catch (err) {
-            setError('Email ou senha inválidos');
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Erro ao fazer login';
+            console.error('Erro ao fazer login:', errorMessage);
+            setError(errorMessage);
         }
     };
 
     return (
         <div>
             <h2>Login</h2>
-            {error && <p>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email:</label>
