@@ -3,13 +3,19 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/auth/';
 
-const register = async (username, email, password) => {
-    const response = await axios.post(API_URL + 'register', {
-        username,
-        email,
-        password,
-    });
-    return response.data;
+const register = async (username, email, senha) => { // Alterado para "senha"
+    try {
+        console.log('Dados enviados para registro:', { username, email, senha });
+        const response = await axios.post(API_URL + 'register', {
+            username,
+            email,
+            senha, // Enviando "senha" em vez de "password"
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro na requisição:', error.response?.data || error.message);
+        throw error;
+    }
 };
 const login = async (email, senha) => {
     try {

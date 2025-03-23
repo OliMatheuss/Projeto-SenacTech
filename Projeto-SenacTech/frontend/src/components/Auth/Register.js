@@ -1,30 +1,41 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import authService from '../../services/authService';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [confirmarSenha, setConfirmarSenha] = useState(''); // Novo campo para confirmar a senha
     const [error, setError] = useState('');
-    const history = useHistory();
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setError('');
+
+        if (!username || !email || !senha || !confirmarSenha) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            alert('As senhas não coincidem. Por favor, tente novamente.');
+            return;
+        }
 
         try {
-            await authService.register({ username, email, senha });
-            history.push('/login');
-        } catch (err) {
-            setError('Erro ao registrar. Tente novamente.');
+            const data = await authService.register(username, email, senha);
+            console.log('Registro bem-sucedido:', data);
+            alert('Usuário registrado com sucesso!');
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Erro ao registrar usuário';
+            console.error('Erro ao registrar:', errorMessage);
+            setError(errorMessage);
         }
     };
 
     return (
         <div>
             <h2>Registrar</h2>
-            {error && <p>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleRegister}>
                 <div>
                     <label>Nome de Usuário:</label>
@@ -50,6 +61,15 @@ const Register = () => {
                         type="password"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Confirmar Senha:</label>
+                    <input
+                        type="password"
+                        value={confirmarSenha}
+                        onChange={(e) => setConfirmarSenha(e.target.value)}
                         required
                     />
                 </div>
