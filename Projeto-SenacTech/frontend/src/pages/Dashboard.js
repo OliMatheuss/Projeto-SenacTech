@@ -26,13 +26,25 @@ const Dashboard = () => {
                 <p>Carregando dados do usuário...</p> // Mensagem enquanto os dados do usuário são carregados
             )}
             <div>
-                <button onClick={() => history.push('/resgatar-recompensa')}>Resgatar Recompensa</button>
-                <button onClick={() => history.push('/criar-missao')}>Criar Missão</button>
-                <button onClick={() => history.push('/listar-missoes')}>Listar Missões</button>
-                <button onClick={() => history.push('/criar-recompensa')}>Criar Recompensa</button>
-                <button onClick={() => history.push('/listar-recompensas')}>Listar Recompensas</button>
+                <button onClick={() => history.push('/resgatar-recompensa')} className="btn btn-outline-success">
+                    Resgatar Recompensa
+                </button>
+                <button onClick={() => history.push('/criar-missao')} className="btn btn-outline-info">
+                    Criar Missão
+                </button>
+                <button onClick={() => history.push('/listar-missoes')} className="btn btn-outline-warning">
+                    Listar Missões
+                </button>
+                <button onClick={() => history.push('/criar-recompensa')} className="btn btn-outline-danger">
+                    Criar Recompensa
+                </button>
+                <button onClick={() => history.push('/listar-recompensas')} className="btn btn-outline-dark">
+                    Listar Recompensas
+                </button>
             </div>
-            <button onClick={handleLogout} style={{ marginTop: '20px' }}>Sair</button>
+            <button onClick={handleLogout} className="btn btn-outline-secondary" style={{ marginTop: '20px' }}>
+                Sair
+            </button>
         </div>
     );
 };

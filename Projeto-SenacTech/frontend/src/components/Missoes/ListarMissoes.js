@@ -1,12 +1,15 @@
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom'; // Importação do useHistory
 import missoesService from '../../services/missoesService';
 
 const ListarMissoes = () => {
     const [missoes, setMissoes] = useState([]);
+    const history = useHistory(); // Inicialização do useHistory
 
     useEffect(() => {
         const fetchMissoes = async () => {
             try {
-                const response = await missoesService.listarMissoes(); // Use o objeto missoesService
+                const response = await missoesService.listarMissoes();
                 setMissoes(response);
             } catch (error) {
                 console.error("Erro ao listar missões:", error);
@@ -26,6 +29,9 @@ const ListarMissoes = () => {
                     </li>
                 ))}
             </ul>
+            <button onClick={() => history.push('/dashboard')} className="btn btn-outline-primary" style={{ marginTop: '20px' }}>
+                Voltar para o Dashboard
+            </button>
         </div>
     );
 };

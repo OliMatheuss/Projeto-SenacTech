@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom'; // Importação do useHistory
 import { listarRecompensas } from '../../services/recompensaService';
 
 const ListarRecompensas = () => {
     const [recompensas, setRecompensas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const history = useHistory(); // Inicialização do useHistory
 
     useEffect(() => {
         const fetchRecompensas = async () => {
@@ -37,6 +39,9 @@ const ListarRecompensas = () => {
                     <li key={recompensa.id}>{recompensa.descricao}</li>
                 ))}
             </ul>
+            <button onClick={() => history.push('/dashboard')} className="btn btn-outline-primary" style={{ marginTop: '20px' }}>
+                Voltar para o Dashboard
+            </button>
         </div>
     );
 };

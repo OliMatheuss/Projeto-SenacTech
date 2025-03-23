@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom'; // Importação do useHistory
 import missoesService from '../../services/missoesService';
 
 const CriarMissao = () => {
     const [descricao, setDescricao] = useState('');
     const [valorDaMissao, setValorDaMissao] = useState(100);
     const [mensagem, setMensagem] = useState('');
+    const history = useHistory(); // Inicialização do useHistory
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,9 +42,14 @@ const CriarMissao = () => {
                         required
                     />
                 </div>
-                <button type="submit">Criar Missão</button>
+                <button type="submit" className="btn btn-outline-success">
+                    Criar Missão
+                </button>
             </form>
             {mensagem && <p>{mensagem}</p>}
+            <button onClick={() => history.push('/dashboard')} className="btn btn-outline-primary" style={{ marginTop: '20px' }}>
+                Voltar para o Dashboard
+            </button>
         </div>
     );
 };

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom'; // Importação do useHistory
 import { criarRecompensa } from '../../services/recompensaService';
 
 const CriarRecompensa = () => {
     const [descricao, setDescricao] = useState('');
     const [mensagem, setMensagem] = useState('');
+    const history = useHistory(); // Inicialização do useHistory
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,9 +31,14 @@ const CriarRecompensa = () => {
                         required
                     />
                 </div>
-                <button type="submit">Criar</button>
+                <button type="submit" className="btn btn-outline-success">
+                    Criar
+                </button>
             </form>
             {mensagem && <p>{mensagem}</p>}
+            <button onClick={() => history.push('/dashboard')} className="btn btn-outline-primary" style={{ marginTop: '20px' }}>
+                Voltar para o Dashboard
+            </button>
         </div>
     );
 };
