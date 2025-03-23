@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom'; // Importação do useHistory
 import authService from '../../services/authService';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState(''); // Novo campo para confirmar a senha
+    const [confirmarSenha, setConfirmarSenha] = useState('');
     const [error, setError] = useState('');
+    const history = useHistory(); // Inicialização do useHistory
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -25,6 +27,7 @@ const Register = () => {
             const data = await authService.register(username, email, senha);
             console.log('Registro bem-sucedido:', data);
             alert('Usuário registrado com sucesso!');
+            history.push('/login'); // Redireciona para a página de login
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Erro ao registrar usuário';
             console.error('Erro ao registrar:', errorMessage);

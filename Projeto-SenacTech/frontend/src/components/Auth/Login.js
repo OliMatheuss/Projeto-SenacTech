@@ -12,23 +12,23 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!email || !senha) {
             alert('Por favor, preencha todos os campos.');
             return;
         }
-
+    
         try {
-            const data = await authService.login(email, senha);
-            login(data); // Salva o estado do usuário no contexto
-            history.push('/dashboard');
+            const response = await authService.login(email, senha);
+            console.log('Dados do usuário:', response.user); // Verifica os dados do usuário retornados
+            login(response.user); // Salva os dados do usuário no contexto
+            history.push('/dashboard'); // Redireciona para o Dashboard
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Erro ao fazer login';
             console.error('Erro ao fazer login:', errorMessage);
             setError(errorMessage);
         }
     };
-
     return (
         <div>
             <h2>Login</h2>

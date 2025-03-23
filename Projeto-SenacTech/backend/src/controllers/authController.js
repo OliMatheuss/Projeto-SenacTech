@@ -21,7 +21,10 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(senha, 10);
 
         // Insere o novo usuário no banco de dados
-        await db.promise().query('INSERT INTO usuarios (username, email, senha) VALUES (?, ?, ?)', [username, email, hashedPassword]);
+        await db.promise().query(
+            'INSERT INTO usuarios (username, email, senha, pontos, status) VALUES (?, ?, ?, ?, ?)',
+            [username, email, hashedPassword, 0, 'ativo']
+        );
 
         res.status(201).json({ message: 'Usuário registrado com sucesso!' });
     } catch (error) {
@@ -56,7 +59,18 @@ exports.login = async (req, res) => {
         // Gera o token JWT
         const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
+        // Retorna o token e os dados do usuário
+        res.json({
+            token,
+            user: {
+                id: usuario.id,
+                username: usuario.username,
+                email: usuario.email,
+                pontos: usuario.pontos || 0, // Inclua outros campos relevantes, como "pontos"
+                status: usuario.status, // Inclui o status do usuário
+                data_criacao: usuario.data_criacao, // Inclui a data de criação
+            },
+        });
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         res.status(500).json({ message: 'Erro ao fazer login', error });
