@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap');
+
+body {
+    background-image: url('../../public/assets/images/fonto.jpeg');
+    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+    color: #ffcc70;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+p {
+    font-size: 1.2rem;
+    color: #ffd580;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+.button {
+    background: linear-gradient(45deg, #ff914d, #ffcc70);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    box-shadow: 2px 2px 15px rgba(255, 140, 0, 0.8);
+}
