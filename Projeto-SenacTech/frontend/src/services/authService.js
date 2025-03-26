@@ -19,20 +19,21 @@ const register = async (username, email, senha) => { // Alterado para "senha"
 };
 const login = async (email, senha) => {
     try {
-        const response = await axios.post(API_URL + 'login', {
-            email,
-            senha,
-        });
+        const response = await axios.post(API_URL + 'login', { email, senha });
         console.log('Resposta da API:', response.data); // Verifique o que está sendo retornado
+
         if (response.data.token) {
-            localStorage.setItem('user', JSON.stringify(response.data));
+            localStorage.setItem('token', response.data.token); // Salva o token
+            localStorage.setItem('usuario_id', response.data.user.id); // Salva apenas o ID do usuário
         }
+
         return response.data;
     } catch (error) {
         console.error('Erro na requisição:', error.response?.data || error.message);
         throw error;
     }
 };
+
 const logout = () => {
     localStorage.removeItem('user');
 };

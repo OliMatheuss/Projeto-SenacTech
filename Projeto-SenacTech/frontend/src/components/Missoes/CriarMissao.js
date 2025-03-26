@@ -8,10 +8,25 @@ const CriarMissao = () => {
     const [mensagem, setMensagem] = useState('');
     const history = useHistory(); // Inicialização do useHistory
 
+    const usuario_id = localStorage.getItem('usuario_id'); // Pegando o ID do usuário salvo no navegador
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        const usuario_id = localStorage.getItem('usuario_id'); // Pegando o ID salvo no login
+    
+        if (!usuario_id) {
+            setMensagem('Erro: Usuário não identificado. Faça login novamente.');
+            return;
+        }
+    
         try {
-            await missoesService.criarMissao({ descricao, valor_da_missao: valorDaMissao });
+            await missoesService.criarMissao({
+                usuario_id: Number(usuario_id), // Convertendo para número
+                descricao,
+                valor_da_missao: valorDaMissao
+            });
+    
             setMensagem('Missão criada com sucesso!');
             setDescricao('');
             setValorDaMissao(100);
@@ -19,7 +34,7 @@ const CriarMissao = () => {
             setMensagem('Erro ao criar missão. Tente novamente.');
         }
     };
-
+    
     return (
         <div>
             <h2>Criar Missão</h2>

@@ -1,39 +1,102 @@
-// backend/src/controllers/missoesController.js
 const MissoesModel = require('../models/missoesModel');
 
-// Cria uma nova missão
-exports.criarMissao = async (req, res) => {
-    const { usuario_id, descricao, valor_da_missao } = req.body;
+/**
+ * Cria uma nova missão para o usuário logado
+ */
+const criarMissao = async (req, res) => {
+    // Pega o ID do usuário do token JWT (autenticação)
+    const usuario_id = req.user.id; 
+    const { descricao, pontos_recompensa } = req.body;
+
+    console.log(`Criando missão para usuário ${usuario_id}`, req.body);
+
+    if (!descricao || pontos_recompensa === undefined) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Descrição e pontos de recompensa são obrigatórios!'
+        });
+    }
+
     try {
-        const novaMissao = await MissoesModel.create({ usuario_id, descricao, valor_da_missao });
-        res.status(201).json(novaMissao);
+        const missaoCriada = await MissoesModel.create({
+            usuario_id,
+            descricao,
+            pontos_recompensa,
+            concluida: false
+        });
+
+        res.status(201).json({
+            success: true,
+            data: missaoCriada,
+            message: 'Missão criada com sucesso!'
+        });
+
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao criar missão', error });
+        console.error('Erro ao criar missão:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno ao criar missão',
+            error: process.env.NODE_ENV === 'development' ? error : {}
+        });
     }
 };
 
-// Lista as missões de um usuário
+/**
+ * Lista todas as missões do usuário logado
+ */
 exports.listarMissoes = async (req, res) => {
-    const { usuario_id } = req.params;
     try {
-        const missoes = await MissoesModel.findAll({ where: { usuario_id } });
+        console.log('Parâmetro recebido:', req.params.id); // Adicione este log
+        
+        const missoes = await MissoesModel.findAll({
+            where: { usuario_id: req.params.id }
+        });
+        
         res.status(200).json(missoes);
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao listar missões', error });
+        console.error('Erro no controller:', error);
+        res.status(500).json({ message: 'Erro ao listar missões' });
     }
 };
 
-// Remove uma missão
-exports.removerMissao = async (req, res) => {
+/**
+ * Remove uma missão do usuário logado
+ */
+const removerMissao = async (req, res) => {
+    const usuario_id = req.user.id;
     const { id } = req.params;
+
     try {
-        const resultado = await MissoesModel.destroy({ where: { id } });
-        if (resultado) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ message: 'Missão não encontrada' });
+        // Verifica se a missão pertence ao usuário
+        const missao = await MissoesModel.findOne({
+            where: { id, usuario_id }
+        });
+
+        if (!missao) {
+            return res.status(404).json({
+                success: false,
+                message: 'Missão não encontrada ou não pertence ao usuário'
+            });
         }
+
+        await missao.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: 'Missão removida com sucesso'
+        });
+
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao remover missão', error });
+        console.error('Erro ao remover missão:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro ao remover missão'
+        });
     }
+};
+
+module.exports = {
+    criarMissao,
+    listarMissoes,
+    removerMissao
 };

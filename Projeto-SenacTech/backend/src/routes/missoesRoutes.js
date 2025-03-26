@@ -6,7 +6,7 @@ const missoesController = require('../controllers/missoesController');
 router.post('/', missoesController.criarMissao);
 
 // Rota para listar missões de um usuário
-router.get('/:usuario_id', missoesController.listarMissoes);
+router.get('/usuario/:id', missoesController.listarMissoes);
 
 // Rota para remover uma missão
 router.delete('/:id', missoesController.removerMissao);

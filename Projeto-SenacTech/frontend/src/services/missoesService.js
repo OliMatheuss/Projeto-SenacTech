@@ -14,12 +14,21 @@ const missoesService = {
 
     listarMissoes: async (usuarioId) => {
         try {
-            const response = await axios.get(`${API_URL}/${usuarioId}`);
-            return response.data;
+          const token = localStorage.getItem('token');
+          const response = await axios.get(`${API_URL}/usuario/${usuarioId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          return response.data;
         } catch (error) {
-            throw error.response.data;
+          console.error('Erro na requisição:', {
+            url: `${API_URL}/usuario/${usuarioId}`,
+            error: error.response?.data || error.message
+          });
+          throw new Error(error.response?.data?.message || 'Erro ao listar missões');
         }
-    },
+      },
 
     removerMissao: async (missaoId) => {
         try {
