@@ -44,7 +44,7 @@ const criarMissao = async (req, res) => {
 /**
  * Lista todas as missões do usuário logado
  */
-exports.listarMissoes = async (req, res) => {
+const listarMissoes = async (req, res) => {
     try {
         console.log('Parâmetro recebido:', req.params.id); // Adicione este log
         
