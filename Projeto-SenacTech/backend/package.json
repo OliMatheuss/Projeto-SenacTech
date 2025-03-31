@@ -22,5 +22,6 @@
     "nodemon": "^2.0.22"
   },
   "author": "Seu Nome",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": []
 }
