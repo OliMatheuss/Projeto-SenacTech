@@ -6,24 +6,20 @@ const MissoesModel = require('../models/missoesModel');
 const criarMissao = async (req, res) => {
     // Pega o ID do usuário do token JWT (autenticação)
     const usuario_id = req.user.id; 
-    const { descricao, pontos_recompensa } = req.body;
+    const { descricao, pontos_recompensa = 100, data_conclusao = null } = req.body;
 
-    console.log(`Criando missão para usuário ${usuario_id}`, req.body);
+    console.log(`Criando missão para usuário ${usuario_id}`, { usuario_id, descricao, pontos_recompensa, data_conclusao });
 
-    if (!descricao || pontos_recompensa === undefined) {
+    if (!descricao) {
         return res.status(400).json({ 
             success: false,
-            message: 'Descrição e pontos de recompensa são obrigatórios!'
+            message: 'A descrição da missão é obrigatória!'
         });
     }
 
     try {
-        const missaoCriada = await MissoesModel.create({
-            usuario_id,
-            descricao,
-            pontos_recompensa,
-            concluida: false
-        });
+        // Chamada corrigida: passar os argumentos diretamente, e não um objeto
+        const missaoCriada = await MissoesModel.create(usuario_id, descricao, pontos_recompensa, data_conclusao, 0);
 
         res.status(201).json({
             success: true,
@@ -40,6 +36,8 @@ const criarMissao = async (req, res) => {
         });
     }
 };
+
+
 
 /**
  * Lista todas as missões do usuário logado

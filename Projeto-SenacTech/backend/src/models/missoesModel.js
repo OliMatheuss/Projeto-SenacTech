@@ -2,10 +2,10 @@
 const db = require('../config/db');
 
 const Missoes = {
-    create: (usuario_id, descricao, valor_da_missao = 100) => {
+    create: (usuario_id, descricao, pontos_recompensa = 100, data_conclusao = null, concluida = 0) => {
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO missoes (usuario_id, descricao, valor_da_missao) VALUES (?, ?, ?)';
-            db.query(query, [usuario_id, descricao, valor_da_missao], (error, results) => {
+            const query = 'INSERT INTO missoes (usuario_id, descricao, pontos_recompensa, data_conclusao, concluida) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [usuario_id, descricao, pontos_recompensa, data_conclusao, concluida], (error, results) => {
                 if (error) {
                     return reject(error);
                 }
