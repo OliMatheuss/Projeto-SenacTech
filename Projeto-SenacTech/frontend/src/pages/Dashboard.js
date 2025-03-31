@@ -13,13 +13,12 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1>Bem-vindo ao Dashboard</h1>
+            <h1>Bem-vindo </h1>
             {user ? ( // Exibe os dados do usuário se ele estiver logado
                 <div style={{ marginBottom: '20px' }}>
                     <p><strong>Nome:</strong> {user.username || 'Usuário'}</p>
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Pontos:</strong> {user.pontos || 0}</p>
-                    <p><strong>Status:</strong> {user.status}</p>
                     <p><strong>Data de Criação:</strong> {new Date(user.data_criacao).toLocaleDateString()}</p>
                 </div>
             ) : (
