@@ -1,57 +1,48 @@
-# Estrutura do Banco de Dados para o Projeto GachaLife
+create database appmovies
 
-Este documento fornece uma visão geral da estrutura do banco de dados utilizada no projeto GachaLife, incluindo as tabelas e seus relacionamentos.
-
-## Tabelas
-
-### 1. Tabela `usuarios`
-
-Armazena os dados dos usuários.
-
-```sql
+CREATE DATABASE dcgachhalife;
+---------------------------------------------------------------------------------------------------------------
+-- Criação da tabela de usuários
 CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    pontos INT DEFAULT 1
+    id INT AUTO_INCREMENT PRIMARY KEY,          -- ID do usuário (chave primária)
+    email VARCHAR(255) NOT NULL UNIQUE,         -- Email do usuário (único)
+    username VARCHAR(255) NOT NULL UNIQUE,      -- Nome de usuário (único)
+    senha VARCHAR(255) NOT NULL,             -- Senha do usuário (armazenada como hash)
+    pontos INT DEFAULT 0,                       -- Pontos do usuário (padrão 0)
+    status ENUM('ativo', 'banido', 'inativo') DEFAULT 'ativo', -- Status do usuário
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Data de criação do usuário
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Data de atualização
 );
-```
-
-### 2. Tabela `missoes`
-
-Armazena as missões criadas pelos usuários.
-
-```sql
+---------------------------------------------------------------------------------------------------------
+-- Criação da tabela de missões
 CREATE TABLE missoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    descricao TEXT NOT NULL,
-    valor_da_missao INT DEFAULT 100,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    id INT AUTO_INCREMENT PRIMARY KEY,         -- ID da missão (chave primária)
+    usuario_id INT,                            -- ID do usuário que criou a missão (pode ser NULL para missões públicas)
+    descricao VARCHAR(255) NOT NULL,           -- Descrição da missão
+    pontos_recompensa INT DEFAULT 100,         -- Pontos de recompensa para a missão (padrão 100)
+    data_conclusao TIMESTAMP NULL,             -- Data de conclusão da missão
+    CONSTRAINT fk_usuario_missao FOREIGN KEY (usuario_id) REFERENCES usuarios(id) -- Chave estrangeira referenciando o usuário
 );
-```
-
-### 3. Tabela `recompensa`
-
-Armazena as recompensas definidas pelos usuários.
-
-```sql
-CREATE TABLE recompensa (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    descricao TEXT NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+--------------------------------------------------------------------------------------------------
+-- Criação da tabela de recompensas
+CREATE TABLE recompensas (
+    id INT AUTO_INCREMENT PRIMARY KEY,         -- ID da recompensa (chave primária)
+    usuario_id INT,                            -- ID do usuário que criou a recompensa (pode ser NULL para recompensas globais)
+    descricao VARCHAR(255) NOT NULL,            -- Descrição da recompensa
+    CONSTRAINT fk_usuario_recompensa FOREIGN KEY (usuario_id) REFERENCES usuarios(id) -- Chave estrangeira referenciando o usuário
 );
-```
 
-## Scripts SQL
 
-Os scripts SQL para criar as tabelas e inserir dados iniciais estão localizados na pasta `scripts`:
+----------------------------------------------------------------------------------------------
+INSERT INTO usuarios (email, senha, pontos) VALUES ('giovane@email.com', '12345', 0);
 
-- `createTables.sql`: Contém os comandos para criar as tabelas `usuarios`, `missoes` e `recompensa`.
-- `seedData.sql`: Contém comandos para inserir dados iniciais nas tabelas.
+INSERT INTO missoes (usuario_id, descricao, pontos_recompensa) VALUES (1, 'Missão de exemplo', 100);
 
-## Conclusão
-
-Esta estrutura de banco de dados foi projetada para suportar as funcionalidades do aplicativo GachaLife, garantindo que os dados dos usuários, missões e recompensas sejam armazenados de forma eficiente e segura.
+INSERT INTO recompensas (usuario_id, descricao) VALUES (1, 'Recompensa de exemplo');
+----------------------------------------------------------------------------------------------
+http://localhost:5000/api/
+http://localhost:5000/api/test-db
+comandos 
+ctrl + c = renicia o node e react
+index node.js
+npm start 
