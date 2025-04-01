@@ -1,24 +1,41 @@
 -- Comandos SQL para criar as tabelas no banco de dados conforme a estrutura definida no projeto GachaLife
 
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    pontos INT DEFAULT 1
-);
+CREATE DATABASE dbgachalife; -- Criação do banco de dados
+---------------------------------------------------------------------------------------------------------------
+--
+-- Estrutura para tabela `usuarios`
+--
 
-CREATE TABLE missoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    descricao TEXT NOT NULL,
-    valor_da_missao INT DEFAULT 100,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `pontos` int(11) DEFAULT 1,
+  `status` enum('ativo','banido','inativo') DEFAULT 'ativo',
+  `data_criacao` timestamp NOT NULL DEFAULT current_timestamp(),
+  `data_atualizacao` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+---------------------------------------------------------------------------------------------------------
+--
+-- Estrutura para tabela `missoes`
+--
 
-CREATE TABLE recompensa (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    descricao TEXT NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+CREATE TABLE `missoes` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `descricao` varchar(255) NOT NULL,
+  `pontos_recompensa` int(11) DEFAULT 100,
+  `data_conclusao` timestamp NULL DEFAULT NULL,
+  `concluida` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--------------------------------------------------------------------------------------------------
+--
+-- Estrutura para tabela `recompensas`
+--
+
+CREATE TABLE `recompensas` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `descricao` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
