@@ -44,13 +44,21 @@ const criarMissao = async (req, res) => {
  */
 const listarMissoes = async (req, res) => {
     try {
-        console.log('Parâmetro recebido:', req.params.id); // Adicione este log
-        
-        const missoes = await MissoesModel.findAll({
-            where: { usuario_id: req.params.id }
-        });
-        
-        res.status(200).json(missoes);
+        console.log('Parâmetro recebido:', req.params);  // Verifica se o parâmetro está vindo corretamente
+
+        const { id } = req.params;  // Pega o ID do usuário da URL
+        if (!id) {
+            return res.status(400).json({ message: "ID do usuário é obrigatório" });
+        }
+
+        // Chama a função findByUserId que foi definida no modelo
+        const missoes = await MissoesModel.findByUserId(id);
+
+        if (!missoes || missoes.length === 0) {
+            return res.status(404).json({ message: 'Nenhuma missão encontrada para esse usuário' });
+        }
+
+        res.status(200).json(missoes); // Retorna as missões encontradas
     } catch (error) {
         console.error('Erro no controller:', error);
         res.status(500).json({ message: 'Erro ao listar missões' });

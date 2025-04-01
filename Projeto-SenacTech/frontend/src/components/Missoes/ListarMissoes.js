@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Importação do useHistory
+import { useHistory } from 'react-router-dom';
 import missoesService from '../../services/missoesService';
 
 const ListarMissoes = () => {
     const [missoes, setMissoes] = useState([]);
-    const history = useHistory(); // Inicialização do useHistory
+    const history = useHistory();
 
     useEffect(() => {
         const fetchMissoes = async () => {
@@ -25,7 +25,7 @@ const ListarMissoes = () => {
             <ul>
                 {missoes.map(missao => (
                     <li key={missao.id}>
-                        {missao.descricao} - Valor: {missao.valor_da_missao} pontos
+                        {missao.descricao} - Valor: {missao.pontos_recompensa} pontos
                     </li>
                 ))}
             </ul>

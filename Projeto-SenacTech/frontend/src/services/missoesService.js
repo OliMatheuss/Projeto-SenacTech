@@ -31,24 +31,30 @@ const missoesService = {
       }
   },
 
-    // Função para listar as missões de um usuário específico
-    listarMissoes: async (usuarioId) => {
-        try {
-            const token = localStorage.getItem('token'); // Pegando o token do localStorage
-            const response = await axios.get(`${API_URL}/usuario/${usuarioId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Enviando o token no cabeçalho
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Erro na requisição:', {
-                url: `${API_URL}/usuario/${usuarioId}`,
-                error: error.response?.data || error.message
-            });
-            throw new Error(error.response?.data?.message || 'Erro ao listar missões');
+// Função para listar as missões de um usuário específico
+listarMissoes: async () => {
+    try {
+        const token = localStorage.getItem('token'); 
+        const usuarioId = localStorage.getItem('usuario_id'); 
+
+        if (!usuarioId) {
+            throw new Error('ID do usuário não encontrado no localStorage');
         }
-    },
+
+        const response = await axios.get(`${API_URL}/${usuarioId}`, {  
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro na requisição:', {
+            url: `${API_URL}/${usuarioId}`,
+            error: error.response?.data || error.message
+        });
+        throw new Error(error.response?.data?.message || 'Erro ao listar missões');
+    }
+},
 
     // Função para remover uma missão específica
     removerMissao: async (missaoId) => {

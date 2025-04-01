@@ -2,13 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const missoesController = require('../controllers/missoesController');
-const authMiddleware = require('../middlewares/authMiddleware'); // Importe o middleware
+const authMiddleware = require('../middlewares/authMiddleware'); // Middleware de autenticação
 
 // Rota protegida: requer autenticação para criar e remover missões
-router.post('/', authMiddleware, missoesController.criarMissao); // <--- Middleware aplicado
-router.delete('/:id', authMiddleware, missoesController.removerMissao); // <--- Middleware aplicado
+router.post('/', authMiddleware, missoesController.criarMissao);
+router.delete('/:id', authMiddleware, missoesController.removerMissao);
 
-// Rota não protegida: listar missões (se não precisar de autenticação)
-router.get('/:id', missoesController.listarMissoes);
+// Rota protegida para listar missões de um usuário específico
+router.get('/:id', authMiddleware, missoesController.listarMissoes);
 
 module.exports = router;
