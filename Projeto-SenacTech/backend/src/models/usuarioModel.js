@@ -26,10 +26,10 @@ const Usuario = {
         });
     },
 
-    updatePontos: (id, pontos) => {
+    adicionarPontos: (usuario_id, pontos) => {
         return new Promise((resolve, reject) => {
-            const query = 'UPDATE usuarios SET pontos = ? WHERE id = ?';
-            db.query(query, [pontos, id], (error, results) => {
+            const query = 'UPDATE usuarios SET pontos = pontos + ? WHERE id = ?';
+            db.query(query, [pontos, usuario_id], (error, results) => {
                 if (error) {
                     return reject(error);
                 }

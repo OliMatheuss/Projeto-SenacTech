@@ -10,5 +10,7 @@ router.delete('/:id', authMiddleware, missoesController.removerMissao);
 
 // Rota protegida para listar missões de um usuário específico
 router.get('/:id', authMiddleware, missoesController.listarMissoes);
+router.put('/concluir/:id', authMiddleware, missoesController.concluirMissao);
+
 
 module.exports = router;

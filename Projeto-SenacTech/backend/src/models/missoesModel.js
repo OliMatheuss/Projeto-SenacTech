@@ -36,7 +36,22 @@ const Missoes = {
                 resolve(results.affectedRows);
             });
         });
+    },
+    
+    concluir: (id) => {
+        return new Promise((resolve, reject) => {
+            const query = 'UPDATE missoes SET concluida = 1, data_conclusao = NOW() WHERE id = ?';
+            db.query(query, [id], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(results.affectedRows);
+            });
+        });
     }
+
+    
 };
+
 
 module.exports = Missoes;

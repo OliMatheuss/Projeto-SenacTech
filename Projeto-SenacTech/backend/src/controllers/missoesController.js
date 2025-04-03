@@ -1,4 +1,5 @@
 const MissoesModel = require('../models/missoesModel');
+const Usuario = require('../models/usuarioModel'); // Adicionando a importação correta
 
 /**
  * Cria uma nova missão para o usuário logado
@@ -69,23 +70,30 @@ const listarMissoes = async (req, res) => {
  * Remove uma missão do usuário logado
  */
 const removerMissao = async (req, res) => {
-    const usuario_id = req.user.id;
-    const { id } = req.params;
+    const usuario_id = req.user.id; // ID do usuário autenticado
+    const { id } = req.params; // ID da missão
 
     try {
         // Verifica se a missão pertence ao usuário
-        const missao = await MissoesModel.findOne({
-            where: { id, usuario_id }
-        });
+        const missoes = await MissoesModel.findByUserId(usuario_id);
+        const missaoEncontrada = missoes.find(m => m.id === parseInt(id));
 
-        if (!missao) {
+        if (!missaoEncontrada) {
             return res.status(404).json({
                 success: false,
                 message: 'Missão não encontrada ou não pertence ao usuário'
             });
         }
 
-        await missao.destroy();
+        // Exclui a missão
+        const resultado = await MissoesModel.delete(id);
+
+        if (resultado === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Erro ao remover missão'
+            });
+        }
 
         res.status(200).json({
             success: true,
@@ -100,9 +108,58 @@ const removerMissao = async (req, res) => {
         });
     }
 };
+const concluirMissao = async (req, res) => {
+    const usuario_id = req.user.id; // ID do usuário autenticado
+    const { id } = req.params; // ID da missão
+
+    try {
+        // Busca a missão para obter os pontos
+        const missoes = await MissoesModel.findByUserId(usuario_id);
+        const missaoEncontrada = missoes.find(m => m.id === parseInt(id));
+
+        if (!missaoEncontrada) {
+            return res.status(404).json({
+                success: false,
+                message: 'Missão não encontrada ou não pertence ao usuário'
+            });
+        }
+
+        const pontosMissao = missaoEncontrada.pontos_recompensa;
+
+        // Atualiza os pontos do usuário
+        await Usuario.adicionarPontos(usuario_id, pontosMissao);
+
+        // Exclui a missão após a conclusão
+        const resultado = await MissoesModel.delete(id);
+
+        if (resultado === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Erro ao concluir missão'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Missão concluída e pontos adicionados com sucesso'
+        });
+
+    } catch (error) {
+        console.error('Erro ao concluir missão:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro ao concluir missão'
+        });
+    }
+};
+
+
+
+
 
 module.exports = {
     criarMissao,
     listarMissoes,
-    removerMissao
+    removerMissao,
+    concluirMissao
 };
