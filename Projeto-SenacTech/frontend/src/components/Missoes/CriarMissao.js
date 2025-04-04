@@ -54,13 +54,7 @@ const CriarMissao = () => {
                     />
                 </div>
                 <div>
-                    <label>Valor da Missão:</label>
-                    <input
-                        type="number"
-                        value={valorDaMissao}
-                        onChange={(e) => setValorDaMissao(Number(e.target.value))} // Garantindo que o valor seja um número
-                        required
-                    />
+                    
                 </div>
                 <button type="submit" className="btn btn-outline-success">
                     Criar Missão
