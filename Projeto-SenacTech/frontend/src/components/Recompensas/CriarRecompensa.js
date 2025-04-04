@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Importação do useHistory
+import { useHistory } from 'react-router-dom';
 import { criarRecompensa } from '../../services/recompensaService';
 
 const CriarRecompensa = () => {
     const [descricao, setDescricao] = useState('');
+    const [pontos, setPontos] = useState(0); // Novo estado para os pontos
     const [mensagem, setMensagem] = useState('');
-    const history = useHistory(); // Inicialização do useHistory
+    const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await criarRecompensa({ descricao });
+            await criarRecompensa({ descricao, pontos }); // Enviando pontos junto com a descrição
             setMensagem('Recompensa criada com sucesso!');
             setDescricao('');
+            setPontos(0);
         } catch (error) {
-            setMensagem('Erro ao criar recompensa. Tente novamente.');
+            setMensagem(error.message || 'Erro ao criar recompensa. Tente novamente.');
         }
     };
 
@@ -28,6 +30,16 @@ const CriarRecompensa = () => {
                         type="text"
                         value={descricao}
                         onChange={(e) => setDescricao(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Pontos necessários:</label>
+                    <input
+                        type="number"
+                        value={pontos}
+                        onChange={(e) => setPontos(parseInt(e.target.value, 10) || 0)}
+                        min="0"
                         required
                     />
                 </div>
