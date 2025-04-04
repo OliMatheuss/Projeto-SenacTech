@@ -25,9 +25,6 @@ const Dashboard = () => {
                 <p>Carregando dados do usuário...</p> // Mensagem enquanto os dados do usuário são carregados
             )}
             <div>
-                <button onClick={() => history.push('/resgatar-recompensa')} className="btn btn-outline-success">
-                    Resgatar Recompensa
-                </button>
                 <button onClick={() => history.push('/criar-missao')} className="btn btn-outline-info">
                     Criar Missão
                 </button>
