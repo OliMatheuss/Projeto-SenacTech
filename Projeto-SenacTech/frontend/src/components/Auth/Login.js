@@ -20,15 +20,19 @@ const Login = () => {
     
         try {
             const response = await authService.login(email, senha);
-            console.log('Dados do usuário:', response.user); // Verifica os dados do usuário retornados
-            login(response.user); // Salva os dados do usuário no contexto
-            history.push('/dashboard'); // Redireciona para o Dashboard
+            login(response.user);
+            history.push('/dashboard');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Erro ao fazer login';
             console.error('Erro ao fazer login:', errorMessage);
             setError(errorMessage);
         }
     };
+
+    const handleVoltarHome = () => {
+        history.push('/');
+    };
+
     return (
         <div>
             <h2>Login</h2>
@@ -54,6 +58,9 @@ const Login = () => {
                 </div>
                 <button type="submit">Entrar</button>
             </form>
+            <button onClick={handleVoltarHome} style={{ marginTop: '10px' }}>
+                Voltar para Home
+            </button>
         </div>
     );
 };

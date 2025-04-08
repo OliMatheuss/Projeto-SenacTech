@@ -34,6 +34,9 @@ const Register = () => {
             setError(errorMessage);
         }
     };
+    const handleVoltarHome = () => {
+        history.push('/');
+    };
 
     return (
         <div>
@@ -78,6 +81,9 @@ const Register = () => {
                 </div>
                 <button type="submit">Registrar</button>
             </form>
+            <button onClick={handleVoltarHome} style={{ marginTop: '10px' }}>
+                Voltar para Home
+            </button>
         </div>
     );
 };
