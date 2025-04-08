@@ -1,5 +1,3 @@
-// arquivo: /Projeto-SenacTech/Projeto-SenacTech/backend/src/models/recompensaModel.js
-
 const db = require('../config/db');
 
 const Recompensa = {
@@ -23,6 +21,18 @@ const Recompensa = {
                     return reject(error);
                 }
                 resolve(results);
+            });
+        });
+    },
+
+    findByIdAndUsuarioId: (id, usuario_id) => {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM recompensas WHERE id = ? AND usuario_id = ?';
+            db.query(query, [id, usuario_id], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(results[0]);
             });
         });
     },

@@ -11,7 +11,7 @@ const CriarRecompensa = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await criarRecompensa({ descricao, pontos }); // Enviando pontos junto com a descrição
+            await criarRecompensa(descricao, pontos); // Correto agora 
             setMensagem('Recompensa criada com sucesso!');
             setDescricao('');
             setPontos(0);

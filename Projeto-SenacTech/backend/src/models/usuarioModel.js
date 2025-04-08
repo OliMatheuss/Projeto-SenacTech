@@ -26,6 +26,18 @@ const Usuario = {
         });
     },
 
+    findByEmail: (email) => {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM usuarios WHERE email = ?';
+            db.query(query, [email], (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(results[0]);
+            });
+        });
+    },
+
     adicionarPontos: (usuario_id, pontos) => {
         return new Promise((resolve, reject) => {
             const query = 'UPDATE usuarios SET pontos = pontos + ? WHERE id = ?';
@@ -38,14 +50,23 @@ const Usuario = {
         });
     },
 
-    findByEmail: (email) => {
+    getPontosUsuario: (id) => {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM usuarios WHERE email = ?';
-            db.query(query, [email], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results[0]);
+            const query = 'SELECT pontos FROM usuarios WHERE id = ?';
+            db.query(query, [id], (error, results) => {
+                if (error) return reject(error);
+                if (results.length === 0) return resolve(null);
+                resolve(results[0].pontos);
+            });
+        });
+    },
+
+    atualizarPontosUsuario: (id, novosPontos) => {
+        return new Promise((resolve, reject) => {
+            const query = 'UPDATE usuarios SET pontos = ? WHERE id = ?';
+            db.query(query, [novosPontos, id], (error, results) => {
+                if (error) return reject(error);
+                resolve(results.affectedRows);
             });
         });
     }
