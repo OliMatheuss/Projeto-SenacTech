@@ -6,11 +6,19 @@ const ListarRecompensas = () => {
     const [recompensas, setRecompensas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [mensagem, setMensagem] = useState('');
     const history = useHistory();
 
     useEffect(() => {
         carregarRecompensas();
     }, []);
+
+    useEffect(() => {
+        if (mensagem) {
+            const timer = setTimeout(() => setMensagem(''), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [mensagem]);
 
     const carregarRecompensas = async () => {
         try {
@@ -26,11 +34,11 @@ const ListarRecompensas = () => {
 
     const handleResgatar = async () => {
         try {
-            const recompensa = await resgatarRecompensa();
-            alert(`Recompensa resgatada: ${recompensa.descricao}`);
-            carregarRecompensas(); // Recarrega a lista após resgate
+            const recompensa = await resgatarRecompensa(); // opcionalmente: resgatarRecompensa(id)
+            setMensagem(`Recompensa resgatada: ${recompensa.descricao}`);
+            carregarRecompensas();
         } catch (err) {
-            alert('Erro ao resgatar recompensa: ' + err.message);
+            setMensagem('Erro ao resgatar recompensa: ' + err.message);
         }
     };
 
@@ -38,47 +46,64 @@ const ListarRecompensas = () => {
         if (window.confirm("Tem certeza que deseja excluir esta recompensa?")) {
             try {
                 await removerRecompensa(id);
+                setMensagem('Recompensa excluída com sucesso!');
                 carregarRecompensas();
             } catch (err) {
-                alert('Erro ao excluir recompensa: ' + err.message);
+                setMensagem('Erro ao excluir recompensa: ' + err.message);
             }
         }
     };
 
-    if (loading) return <div>Carregando...</div>;
-    if (error) return <div>Erro ao carregar recompensas: {error}</div>;
+    if (loading) return <div className="text-center mt-5">Carregando recompensas...</div>;
+    if (error) return <div className="alert alert-danger mt-4">Erro: {error}</div>;
 
     return (
-        <div>
-            <h2>Recompensas</h2>
-            <ul>
-    {recompensas.map(recompensa => (
-        <li key={recompensa.id} style={{ marginBottom: '10px' }}>
-            <div style={{ fontWeight: 'bold' }}>
-                {recompensa.descricao} ({recompensa.pontos} pontos)
-            </div>
-            <div style={{ marginTop: '5px' }}>
-                <button
-                    onClick={() => handleResgatar()}
-                    className="btn btn-success btn-sm"
-                    style={{ marginRight: '10px' }}
+        <div className="container mt-5" style={{ maxWidth: '600px' }}>
+            <h2 className="mb-4 text-center">Lista de Recompensas</h2>
+
+            {mensagem && (
+                <div
+                    className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}
                 >
-                    Resgatar
-                </button>
-                <button
-                    onClick={() => handleExcluir(recompensa.id)}
-                    className="btn btn-danger btn-sm"
-                >
-                    Excluir
-                </button>
-            </div>
-        </li>
-    ))}
-</ul>
+                    {mensagem}
+                </div>
+            )}
+
+            {recompensas.length === 0 ? (
+                <p className="text-center">Nenhuma recompensa cadastrada.</p>
+            ) : (
+                <ul className="list-group">
+                    {recompensas.map((recompensa) => (
+                        <li
+                            key={recompensa.id}
+                            className="list-group-item d-flex justify-content-between align-items-center"
+                        >
+                            <div>
+                                <strong>{recompensa.descricao}</strong> <br />
+                                <small>{recompensa.pontos} pontos</small>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => handleResgatar()} // ou passar o ID: handleResgatar(recompensa.id)
+                                    className="btn btn-success btn-sm me-2"
+                                >
+                                    Resgatar
+                                </button>
+                                <button
+                                    onClick={() => handleExcluir(recompensa.id)}
+                                    className="btn btn-danger btn-sm"
+                                >
+                                    Excluir
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
             <button
                 onClick={() => history.push('/dashboard')}
-                className="btn btn-outline-primary"
-                style={{ marginTop: '20px' }}
+                className="btn btn-outline-primary w-100 mt-4"
             >
                 Voltar para o Dashboard
             </button>

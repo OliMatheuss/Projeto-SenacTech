@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Importação do useHistory
+import { useHistory } from 'react-router-dom';
 import authService from '../../services/authService';
 
 const Register = () => {
@@ -8,18 +8,18 @@ const Register = () => {
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
     const [error, setError] = useState('');
-    const history = useHistory(); // Inicialização do useHistory
+    const history = useHistory();
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
         if (!username || !email || !senha || !confirmarSenha) {
-            alert('Por favor, preencha todos os campos.');
+            setError('Por favor, preencha todos os campos.');
             return;
         }
 
         if (senha !== confirmarSenha) {
-            alert('As senhas não coincidem. Por favor, tente novamente.');
+            setError('As senhas não coincidem. Por favor, tente novamente.');
             return;
         }
 
@@ -27,63 +27,82 @@ const Register = () => {
             const data = await authService.register(username, email, senha);
             console.log('Registro bem-sucedido:', data);
             alert('Usuário registrado com sucesso!');
-            history.push('/login'); // Redireciona para a página de login
+            history.push('/login');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Erro ao registrar usuário';
             console.error('Erro ao registrar:', errorMessage);
             setError(errorMessage);
         }
     };
+
     const handleVoltarHome = () => {
         history.push('/');
     };
 
     return (
-        <div>
-            <h2>Registrar</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleRegister}>
-                <div>
-                    <label>Nome de Usuário:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Senha:</label>
-                    <input
-                        type="password"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Confirmar Senha:</label>
-                    <input
-                        type="password"
-                        value={confirmarSenha}
-                        onChange={(e) => setConfirmarSenha(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Registrar</button>
-            </form>
-            <button onClick={handleVoltarHome} style={{ marginTop: '10px' }}>
-                Voltar para Home
-            </button>
+        <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <div className="card p-4" style={{ maxWidth: '450px', width: '100%' }}>
+                <h2 className="text-center mb-4">Registrar</h2>
+
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                <form onSubmit={handleRegister}>
+                    <div className="mb-3">
+                        <label className="form-label">Nome de Usuário:</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Email:</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Senha:</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={senha}
+                            onChange={(e) => setSenha(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Confirmar Senha:</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={confirmarSenha}
+                            onChange={(e) => setConfirmarSenha(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary w-100">
+                        Registrar
+                    </button>
+                </form>
+
+                <button
+                    onClick={handleVoltarHome}
+                    className="btn btn-outline-secondary w-100 mt-3"
+                >
+                    Voltar para Home
+                </button>
+            </div>
         </div>
     );
 };
