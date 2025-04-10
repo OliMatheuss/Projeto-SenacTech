@@ -20,7 +20,9 @@ const Login = () => {
 
         try {
             const response = await authService.login(email, senha);
-            login(response.user);
+            const { user, token } = response;
+
+            login(user, token); // <-- agora com token também
             history.push('/dashboard');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Erro ao fazer login.';

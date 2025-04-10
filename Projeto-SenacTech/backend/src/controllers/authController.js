@@ -76,3 +76,24 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: 'Erro ao fazer login', error });
     }
 };
+
+// Rota para retornar os dados do usuário autenticado
+exports.getUser = async (req, res) => {
+    try {
+        const userId = req.user.id; // <-- usando o ID que o middleware coloca em req.user
+
+        const [rows] = await db.promise().query(
+            'SELECT id, username, email, pontos, status, data_criacao FROM usuarios WHERE id = ?',
+            [userId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).json({ message: 'Erro ao buscar usuário', error });
+    }
+};

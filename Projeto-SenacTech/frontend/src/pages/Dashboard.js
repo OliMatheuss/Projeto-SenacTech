@@ -1,10 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user, fetchUserFromAPI, logout } = useContext(AuthContext);
     const history = useHistory();
+
+    useEffect(() => {
+        fetchUserFromAPI(); // força o refresh dos dados
+    }, []);
 
     const handleLogout = () => {
         logout();
@@ -22,7 +27,6 @@ const Dashboard = () => {
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Pontos:</strong> {user.pontos || 0}</p>
                         <p><strong>Data de Criação:</strong> {new Date(user.data_criacao).toLocaleDateString()}</p>
-                        {/* <img src={user.avatarUrl} alt="Avatar" className="img-thumbnail" width="100" /> */}
                     </div>
                 ) : (
                     <p>Carregando dados do usuário...</p>
