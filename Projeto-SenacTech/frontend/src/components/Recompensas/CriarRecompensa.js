@@ -59,18 +59,18 @@ const CriarRecompensa = () => {
             />
         </span>
         <input
-            type="number"
-            className="form-control"
-            placeholder="Ex: 150"
-            value={pontos}
-            onChange={(e) => setPontos(parseInt(e.target.value, 10) || 0)}
-            min="1"
-            required
-            style={{
-                appearance: 'textfield',
-                MozAppearance: 'textfield',
-                WebkitAppearance: 'none',
-            }}
+    type="number"
+    className="form-control"
+    placeholder="Ex: 150"
+    value={pontos}
+    onChange={(e) => setPontos(e.target.value)} // não converte aqui
+    min="1"
+    required
+    style={{
+        appearance: 'textfield',
+        MozAppearance: 'textfield',
+        WebkitAppearance: 'none',
+    }}
         />
     </div>
 </div>
