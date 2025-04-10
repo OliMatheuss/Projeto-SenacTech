@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
 import '../styles/Dashboard.css';
+import '../styles/home.css';
 
 const Dashboard = () => {
     const { user, fetchUserFromAPI, logout } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const Dashboard = () => {
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
             <div className="card p-4" style={{ maxWidth: '600px', width: '100%' }}>
-                <h2 className="text-center mb-4">Bem-vindo</h2>
+                <h1 className="text-center mb-4">Bem-vindo</h1>
 
                 {user ? (
                     <div className="mb-4">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import missoesService from '../../services/missoesService';
 
+
 const CriarMissao = () => {
     const [descricao, setDescricao] = useState('');
     const [mensagem, setMensagem] = useState('');
@@ -44,7 +45,7 @@ const CriarMissao = () => {
 
     return (
         <div className="container mt-5" style={{ maxWidth: '500px' }}>
-            <h2 className="mb-4 text-center">Criar Missão</h2>
+            <h2 className="page-title">Criar Missão</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Descrição da Missão:</label>
@@ -58,14 +59,23 @@ const CriarMissao = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label className="form-label">Pontos da Missão:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        value={100}
-                        disabled
-                    />
-                </div>
+    <label className="form-label">Pontos da Missão:</label>
+    <div className="input-group">
+        <input
+            type="number"
+            className="form-control"
+            value={100}
+            disabled
+        />
+        <span className="input-group-text bg-light">
+            <img
+                src="/assets/icons/coin.svg"
+                alt="coin"
+                style={{ width: '20px', height: '20px' }}
+            />
+        </span>
+    </div>
+</div>
                 <button type="submit" className="btn btn-success w-100">Criar Missão</button>
             </form>
 

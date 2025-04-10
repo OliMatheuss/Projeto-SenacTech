@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import authService from '../../services/authService';
 import AuthContext from '../../contexts/AuthContext';
 
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -38,7 +39,7 @@ const Login = () => {
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
             <div className="card p-4" style={{ maxWidth: '400px', width: '100%' }}>
-                <h2 className="text-center mb-4">Login</h2>
+            <h2 className="page-title">Login</h2>
 
                 {error && <div className="alert alert-danger">{error}</div>}
 

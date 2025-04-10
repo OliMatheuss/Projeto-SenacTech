@@ -42,7 +42,7 @@ const Register = () => {
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
             <div className="card p-4" style={{ maxWidth: '450px', width: '100%' }}>
-                <h2 className="text-center mb-4">Registrar</h2>
+            <h2 className="page-title">Register</h2>
 
                 {error && <div className="alert alert-danger">{error}</div>}
 

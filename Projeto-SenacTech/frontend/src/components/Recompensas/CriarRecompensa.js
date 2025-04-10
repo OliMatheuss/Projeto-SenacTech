@@ -35,7 +35,7 @@ const CriarRecompensa = () => {
 
     return (
         <div className="container mt-5" style={{ maxWidth: '500px' }}>
-            <h2 className="mb-4 text-center">Criar Recompensa</h2>
+            <h2 className="page-title">Criar Recompensa</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Descrição:</label>
@@ -49,17 +49,31 @@ const CriarRecompensa = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label className="form-label">Pontos necessários:</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        placeholder="Ex: 150"
-                        value={pontos}
-                        onChange={(e) => setPontos(parseInt(e.target.value, 10) || 0)}
-                        min="1"
-                        required
-                    />
-                </div>
+    <label className="form-label">Pontos necessários:</label>
+    <div className="input-group">
+        <span className="input-group-text bg-light">
+            <img
+                src="/assets/icons/coin.svg"
+                alt="coin"
+                style={{ width: '20px', height: '20px', fill: '#c9b713' }}
+            />
+        </span>
+        <input
+            type="number"
+            className="form-control"
+            placeholder="Ex: 150"
+            value={pontos}
+            onChange={(e) => setPontos(parseInt(e.target.value, 10) || 0)}
+            min="1"
+            required
+            style={{
+                appearance: 'textfield',
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+            }}
+        />
+    </div>
+</div>
                 <button type="submit" className="btn btn-success w-100">Criar Recompensa</button>
             </form>
 
