@@ -71,7 +71,7 @@ const Login = () => {
 
                 <button
                     onClick={handleVoltarHome}
-                    className="btn btn-outline-secondary w-100 mt-3"
+                    className="btn btn-secondary w-100 mt-3"
                 >
                     Voltar para Home
                 </button>

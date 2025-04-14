@@ -35,28 +35,28 @@ const Dashboard = () => {
 
                 <div className="row g-2 mb-3">
                     <div className="col-6">
-                        <button onClick={() => history.push('/criar-missao')} className="btn btn-outline-info w-100">
+                        <button onClick={() => history.push('/criar-missao')} className="btn btn-info w-100">
                             Criar Missão
                         </button>
                     </div>
                     <div className="col-6">
-                        <button onClick={() => history.push('/listar-missoes')} className="btn btn-outline-warning w-100">
+                        <button onClick={() => history.push('/listar-missoes')} className="btn btn-warning w-100">
                             Listar Missões
                         </button>
                     </div>
                     <div className="col-6">
-                        <button onClick={() => history.push('/criar-recompensa')} className="btn btn-outline-danger w-100">
+                        <button onClick={() => history.push('/criar-recompensa')} className="btn btn-danger w-100">
                             Criar Recompensa
                         </button>
                     </div>
                     <div className="col-6">
-                        <button onClick={() => history.push('/listar-recompensas')} className="btn btn-outline-dark w-100">
+                        <button onClick={() => history.push('/listar-recompensas')} className="btn btn-dark w-100">
                             Listar Recompensas
                         </button>
                     </div>
                 </div>
 
-                <button onClick={handleLogout} className="btn btn-outline-secondary w-100">
+                <button onClick={handleLogout} className="btn btn-secondary w-100">
                     Sair
                 </button>
             </div>
