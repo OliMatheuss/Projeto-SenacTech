@@ -160,7 +160,7 @@ const ListarRecompensas = () => {
             {/* Botão voltar */}
             <button
                 onClick={() => history.push('/dashboard')}
-                className="btn btn-outline-primary w-100 mt-4"
+                className="btn btn-primary w-100 mt-4"
             >
                 Voltar para o Dashboard
             </button>
