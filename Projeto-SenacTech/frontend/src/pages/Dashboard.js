@@ -1,15 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
-import '../styles/Dashboard.css';
-import '../styles/home.css';
 
 const Dashboard = () => {
     const { user, fetchUserFromAPI, logout } = useContext(AuthContext);
     const history = useHistory();
 
     useEffect(() => {
-        fetchUserFromAPI(); // força o refresh dos dados
+        fetchUserFromAPI();
     }, []);
 
     const handleLogout = () => {
@@ -18,12 +16,11 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-            <div className="card p-4" style={{ maxWidth: '600px', width: '100%' }}>
-                <h1 className="text-center mb-4">Bem-vindo</h1>
-
+        <div className="page-container">
+            <div className="card">
+                <h1>Bem-vindo</h1>
                 {user ? (
-                    <div className="mb-4">
+                    <div style={{ marginBottom: '20px' }}>
                         <p><strong>Nome:</strong> {user.username || 'Usuário'}</p>
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Pontos:</strong> {user.pontos || 0}</p>
@@ -32,30 +29,20 @@ const Dashboard = () => {
                 ) : (
                     <p>Carregando dados do usuário...</p>
                 )}
-
-                <div className="row g-2 mb-3">
-                    <div className="col-6">
-                        <button onClick={() => history.push('/criar-missao')} className="btn btn-info w-100">
-                            Criar Missão
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button onClick={() => history.push('/listar-missoes')} className="btn btn-warning w-100">
-                            Listar Missões
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button onClick={() => history.push('/criar-recompensa')} className="btn btn-danger w-100">
-                            Criar Recompensa
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button onClick={() => history.push('/listar-recompensas')} className="btn btn-dark w-100">
-                            Listar Recompensas
-                        </button>
-                    </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                    <button onClick={() => history.push('/criar-missao')} className="btn btn-info w-100">
+                        Criar Missão
+                    </button>
+                    <button onClick={() => history.push('/listar-missoes')} className="btn btn-warning w-100">
+                        Listar Missões
+                    </button>
+                    <button onClick={() => history.push('/criar-recompensa')} className="btn btn-danger w-100">
+                        Criar Recompensa
+                    </button>
+                    <button onClick={() => history.push('/listar-recompensas')} className="btn btn-dark w-100">
+                        Listar Recompensas
+                    </button>
                 </div>
-
                 <button onClick={handleLogout} className="btn btn-secondary w-100">
                     Sair
                 </button>

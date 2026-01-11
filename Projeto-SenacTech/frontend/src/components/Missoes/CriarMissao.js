@@ -45,89 +45,97 @@ const CriarMissao = () => {
     };
 
     return (
-        <div className="container mt-5" style={{ maxWidth: '600px' }}>
-            {/* Título da página */}
-            <h2 className="page-title mb-4 text-white text-center">Criar Nova Missão</h2>
+        <div className="page-container">
+            <div className="card">
+                <h1>Criar Nova Missão</h1>
 
-            {/* Mensagem de feedback */}
-            {mensagem && (
-                <div
-                    className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}
-                >
-                    {mensagem}
-                </div>
-            )}
-
-            {/* Formulário de criação */}
-            <form
-                onSubmit={handleSubmit}
-                className="p-4 rounded shadow"
-                style={{
-                    background: 'rgba(0,0,0,0.5)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#fff'
-                }}
-            >
-                {/* Campo de descrição da missão */}
-                <div className="mb-3">
-                    <label className="form-label fw-bold">Descrição da Missão:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Digite a missão..."
-                        value={descricao}
-                        onChange={(e) => setDescricao(e.target.value)}
-                    />
-                </div>
-
-                {/* Campo fixo de pontos da missão */}
-                <div className="mb-3 d-flex flex-column align-items-center">
-                    <label className="form-label text-warning fw-bold">Pontos da Missão:</label>
-                    <div className="input-group shadow-sm" style={{ width: '160px' }}>
-                        <input
-                            type="number"
-                            className="form-control text-center fw-bold"
-                            value={100}
-                            disabled
-                            style={{
-                                backgroundColor: '#fffce0',
-                                color: '#c9b713',
-                                fontSize: '1.3rem',
-                                border: '2px solid #c4b214',
-                                borderRight: 'none',
-                                borderRadius: '8px 0 0 8px',
-                            }}
-                        />
-                        <span
-                            className="input-group-text bg-white"
-                            style={{
-                                border: '2px solid #c2a318',
-                                borderLeft: 'none',
-                                borderRadius: '0 8px 8px 0',
-                            }}
-                        >
-                            <img
-                                src="/assets/icons/coin.svg"
-                                alt="coin"
-                                style={{ width: '24px', height: '24px' }}
-                            />
-                        </span>
+                {/* Mensagem de feedback */}
+                {mensagem && (
+                    <div
+                        className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}
+                    >
+                        {mensagem}
                     </div>
-                </div>
+                )}
 
-                {/* Botão para criar missão */}
-                <button type="submit" className="btn btn-success w-100">
-                    Criar Missão
+                {/* Formulário de criação */}
+                <form onSubmit={handleSubmit}>
+                    {/* Campo de descrição da missão */}
+<div className="mb-3">
+    <label
+    className="form-label fw-bold"
+    style={{ color: '#c9b713' }} // cor dourada
+>
+    Descrição da Missão:
+</label>
+    <input
+        type="text"
+        className="form-control"
+        placeholder="Digite a missão..."
+        value={descricao}
+        onChange={(e) => setDescricao(e.target.value)}
+        style={{
+            backgroundColor: '#fffce0', // mesma cor do input de pontos
+            color: '#c9b713',           // mesma cor do texto
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            border: '2px solid #c4b214',
+            borderRadius: '8px',        // arredondado igual ao input de pontos
+        }}
+    />
+</div>
+
+                    {/* Campo fixo de pontos da missão */}
+                    <div className="mb-3 d-flex flex-column align-items-center">
+                        <label className="form-label text-warning fw-bold">Pontos da Missão:</label>
+                        <div className="input-group shadow-sm" style={{ width: '160px' }}>
+                            <input
+                                type="number"
+                                className="form-control text-center fw-bold"
+                                value={100}
+                                disabled
+                                style={{
+                                    backgroundColor: '#fffce0',
+                                    color: '#c9b713',
+                                    fontSize: '1.3rem',
+                                    border: '2px solid #c4b214',
+                                    borderRight: 'none',
+                                    borderRadius: '8px 0 0 8px',
+                                }}
+                            />
+                            <span
+                                className="input-group-text"
+                                style={{
+                                    backgroundColor: '#c4b214',
+                                    color: '#fff',
+                                    border: '2px solid #c4b214',
+                                    borderLeft: 'none',
+                                    borderRadius: '0 8px 8px 0',
+                                }}
+                            >
+                                <img
+                                    src="/assets/icons/coin.svg"
+                                    alt="coin"
+                                    style={{ width: '20px', height: '20px' }}
+                                />
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Botão de submissão */}
+                    <button type="submit" className="btn btn-success w-100 mb-3">
+                        Criar Missão
+                    </button>
+                </form>
+
+                {/* Botão para voltar ao dashboard */}
+                <button
+                    onClick={() => history.push('/dashboard')}
+                    className="btn btn-secondary w-100"
+                >
+                    Voltar para o Dashboard
                 </button>
-            </form>
-
-            {/* Botão para voltar ao dashboard */}
-            <button
-                onClick={() => history.push('/dashboard')}
-                className="btn btn-outline-primary w-100 mt-4"
-            >
-                Voltar para o Dashboard
-            </button>
+            </div>
         </div>
     );
 };

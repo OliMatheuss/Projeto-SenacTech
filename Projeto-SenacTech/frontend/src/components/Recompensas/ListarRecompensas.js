@@ -69,10 +69,9 @@ const ListarRecompensas = () => {
     if (error) return <div className="alert alert-danger mt-4">Erro: {error}</div>;
 
     return (
-        <div className="container mt-5" style={{ maxWidth: '600px' }}>
-            
-            {/* Título da página */}
-            <h2 className="page-title">Lista de Recompensas</h2>
+        <div className="page-container">
+            <div className="card">
+                <h1>Lista de Recompensas</h1>
 
             {/* Info do usuário no topo */}
             <div
@@ -122,14 +121,15 @@ const ListarRecompensas = () => {
                         >
                             <div>
                                 <strong style={{ fontSize: '1.1rem' }}>{recompensa.descricao}</strong> <br />
-                                <small style={{ color: '#ffcc66' }}>{recompensa.pontos} pontos</small>
+                                <small>Pontos necessários: {recompensa.pontos_necessarios}</small>
                             </div>
                             <div>
                                 <button
                                     onClick={() => handleResgatar()}
                                     className="btn btn-sm me-2"
+                                    disabled={pontosUsuario < recompensa.pontos_necessarios}
                                     style={{
-                                        backgroundColor: '#28a745',
+                                        backgroundColor: pontosUsuario >= recompensa.pontos_necessarios ? '#28a745' : '#6c757d',
                                         border: 'none',
                                         color: 'white',
                                         boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
@@ -157,13 +157,13 @@ const ListarRecompensas = () => {
                 </ul>
             )}
 
-            {/* Botão voltar */}
-            <button
-                onClick={() => history.push('/dashboard')}
-                className="btn btn-primary w-100 mt-4"
-            >
-                Voltar para o Dashboard
-            </button>
+                <button
+                    onClick={() => history.push('/dashboard')}
+                    className="btn btn-secondary w-100 mt-3"
+                >
+                    Voltar para o Dashboard
+                </button>
+            </div>
         </div>
     );
 };

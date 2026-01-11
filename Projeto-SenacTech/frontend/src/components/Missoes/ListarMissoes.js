@@ -63,9 +63,9 @@ const ListarMissoes = () => {
     };
 
     return (
-        <div className="container mt-5" style={{ maxWidth: '600px' }}>
-             {/* Título da seção de missões */}
-             <h2 className="page-title">Lista de Missões</h2>
+        <div className="page-container">
+            <div className="card">
+                <h1>Lista de Missões</h1>
 
             {/* Informações do usuário - AGORA NO TOPO */}
             <div
@@ -151,13 +151,14 @@ const ListarMissoes = () => {
                 </ul>
             )}
 
-            {/* Botão para voltar ao Dashboard */}
-            <button
-                onClick={() => history.push('/dashboard')}
-                className="btn btn-primary w-100 mt-4"
-            >
-                Voltar para o Dashboard
-            </button>
+                {/* Botão para voltar ao dashboard */}
+                <button
+                    onClick={() => history.push('/dashboard')}
+                    className="btn btn-secondary w-100 mt-3"
+                >
+                    Voltar para o Dashboard
+                </button>
+            </div>
         </div>
     );
 };

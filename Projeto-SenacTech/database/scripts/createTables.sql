@@ -37,5 +37,9 @@ CREATE TABLE `missoes` (
 CREATE TABLE `recompensas` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) DEFAULT NULL,
-  `descricao` varchar(255) NOT NULL
+  `descricao` varchar(255) NOT NULL,
+  `pontos_necessarios` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Adicionar coluna pontos_necessarios se não existir
+ALTER TABLE `recompensas` ADD COLUMN `pontos_necessarios` int(11) DEFAULT 0;

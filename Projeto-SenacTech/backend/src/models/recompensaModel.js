@@ -3,7 +3,7 @@ const db = require('../config/db');
 const Recompensa = {
     create: (usuario_id, descricao, pontos) => {
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO recompensas (usuario_id, descricao, pontos) VALUES (?, ?, ?)';
+            const query = 'INSERT INTO recompensas (usuario_id, descricao, pontos_necessarios) VALUES (?, ?, ?)';
             db.query(query, [usuario_id, descricao, pontos], (error, results) => {
                 if (error) {
                     return reject(error);
@@ -39,7 +39,7 @@ const Recompensa = {
 
     updatePontos: (id, pontos) => {
         return new Promise((resolve, reject) => {
-            const query = 'UPDATE recompensas SET pontos = ? WHERE id = ?';
+            const query = 'UPDATE recompensas SET pontos_necessarios = ? WHERE id = ?';
             db.query(query, [pontos, id], (error, results) => {
                 if (error) {
                     return reject(error);
