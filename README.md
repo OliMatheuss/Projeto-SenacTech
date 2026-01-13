@@ -1,107 +1,90 @@
-Documento Técnico - Projeto GachaLife (Projeto de Conclusão - SENAC Tech)
-1. Visão Geral
-Nome do Projeto: GachaLife
-Descrição:
-O GachaLife é um aplicativo desenvolvido em React.js que incentiva os usuários a realizarem boas ações por meio de um sistema de missões e recompensas gamificadas. Cada ação positiva realizada pelo usuário contribui com pontos, que podem ser trocados por recompensas personalizadas.
+# 🎮 GachaLife  
+**Projeto de Conclusão — SENAC Tech**
 
-2. Tecnologias Utilizadas
-Frontend: React.js
+## 📌 Objetivo do Projeto
+O **GachaLife** é um aplicativo web desenvolvido com foco em **gamificação**, cujo objetivo é incentivar a realização de boas ações por meio de um sistema de **missões e recompensas personalizadas**.
 
-Backend: Node.js com Express
+A proposta do projeto é transformar ações positivas em metas alcançáveis, promovendo engajamento e constância por meio de pontos e recompensas definidas pelo próprio usuário.
 
-Banco de Dados: MySQL
+---
 
-Autenticação: JWT (JSON Web Token)
+## 🧠 Visão Geral
+O sistema permite que os usuários criem **missões pessoais**, acumulem **pontos** ao concluí-las e utilizem esses pontos para **resgatar recompensas**, também criadas por eles.
 
-Segurança: Hash de senhas com bcrypt
+Cada missão concluída gera **100 pontos**, que podem ser acumulados e trocados conforme o valor definido em cada recompensa.
 
-3. Estrutura do Banco de Dados
-3.1 Tabela usuarios
-Armazena os dados básicos dos usuários.
+---
 
-sql
-Copiar
-Editar
-CREATE TABLE usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(50) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  senha VARCHAR(255) NOT NULL,
-  pontos INT DEFAULT 1
-);
-3.2 Tabela missoes
-Armazena as missões criadas pelos usuários.
+## 🛠️ Tecnologias Utilizadas
 
-sql
-Copiar
-Editar
-CREATE TABLE missoes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id INT NOT NULL,
-  descricao TEXT NOT NULL,
-  valor_da_missao INT DEFAULT 100,
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
-3.3 Tabela recompensa
-Armazena as recompensas definidas pelos próprios usuários.
+### Frontend
+- React.js
 
-sql
-Copiar
-Editar
-CREATE TABLE recompensa (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id INT NOT NULL,
-  descricao TEXT NOT NULL,
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
-4. Fluxo do Aplicativo
-O usuário realiza o cadastro e login.
+### Backend
+- Node.js
+- Express
 
-Após autenticação, pode criar missões pessoais.
+### Autenticação e Segurança
+- JWT (JSON Web Token)
+- Bcrypt para criptografia de senhas
 
-Ao concluir uma missão, seus pontos aumentam.
+---
 
-O usuário pode criar recompensas que deseja receber.
+## 🔄 Fluxo da Aplicação
 
-Ao acumular 500 pontos, o sistema sorteia uma recompensa aleatória cadastrada pelo próprio usuário.
+1. O usuário realiza cadastro e login.
+2. Após autenticação, pode criar missões pessoais.
+3. Cada missão concluída adiciona **100 pontos** ao usuário.
+4. O usuário cria recompensas personalizadas, definindo:
+   - Descrição
+   - Valor de pontos necessário para o resgate
+5. Ao acumular pontos suficientes, o usuário pode resgatar suas recompensas.
 
-5. Endpoints da API
-5.1 Autenticação
-POST /api/auth/register → Cadastro de novo usuário.
+---
 
-POST /api/auth/login → Login e geração de token JWT.
+## 🔌 API — Endpoints Principais
 
-5.2 Usuários
-GET /api/usuarios/:id → Retorna dados do usuário.
+### 🔐 Autenticação
+- `POST /api/auth/register` → Cadastro de usuário
+- `POST /api/auth/login` → Login e geração de token JWT
 
-PATCH /api/usuarios/:id/pontos → Atualiza pontos do usuário.
+---
 
-5.3 Missões
-POST /api/missoes → Cria uma nova missão.
+### 👤 Usuários
+- `GET /api/usuarios/:id` → Retorna dados do usuário
+- `PATCH /api/usuarios/:id/pontos` → Atualiza a pontuação do usuário
 
-GET /api/missoes/:usuario_id → Lista as missões do usuário.
+---
 
-DELETE /api/missoes/:id → Exclui uma missão.
+### 🎯 Missões
+- `POST /api/missoes` → Cria uma nova missão
+- `GET /api/missoes/:usuario_id` → Lista as missões do usuário
+- `DELETE /api/missoes/:id` → Remove uma missão
+- *(Evolução futura)* `PATCH /api/missoes/:id/concluir` → Marca missão como concluída
 
-(Sugestão futura: PATCH /api/missoes/:id/concluir → Marcar missão como concluída)
+---
 
-5.4 Recompensas
-POST /api/recompensa → Cria uma recompensa.
+### 🎁 Recompensas
+- `POST /api/recompensa` → Cria uma recompensa
+- `GET /api/recompensa/:usuario_id` → Lista recompensas do usuário
+- `DELETE /api/recompensa/:id` → Remove recompensa
+- `POST /api/recompensa/resgatar` → Resgata recompensa conforme pontos disponíveis
 
-GET /api/recompensa/:usuario_id → Lista as recompensas do usuário.
+---
 
-DELETE /api/recompensa/:id → Exclui uma recompensa.
+## 📏 Regras de Negócio
+- Cada missão concluída gera **100 pontos**.
+- O usuário define o valor de pontos de cada recompensa.
+- O resgate só é permitido se o usuário possuir pontos suficientes.
+- Missões e recompensas são sempre vinculadas ao usuário autenticado.
 
-POST /api/recompensa/resgatar → Resgata uma recompensa aleatória ao custo de 500 pontos.
+---
 
-6. Regras de Negócio
-Cada usuário pode criar suas próprias missões e recompensas.
+## 🚀 Considerações Finais
+O **GachaLife** é um projeto que une tecnologia e gamificação para incentivar comportamentos positivos de forma simples e personalizada.
 
-Missões concluídas aumentam a pontuação do usuário.
-
-Ao atingir 500 pontos, é possível resgatar uma recompensa aleatória.
-
-As recompensas sorteadas são sempre aquelas cadastradas pelo próprio usuário.
-
-7. Conclusão
-Este documento apresenta a base técnica para o desenvolvimento do GachaLife, um aplicativo que combina tecnologia e gamificação para incentivar boas ações. A estrutura proposta garante uma experiência fluida, segura e motivadora para os usuários, com possibilidade de expansão para funcionalidades futuras, como rankings, níveis e interações sociais.
+Sua arquitetura permite futuras expansões, como:
+- Sistema de níveis
+- Conquistas
+- Rankings
+- Funcionalidades sociais
