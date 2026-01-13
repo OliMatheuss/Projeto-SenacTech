@@ -1,4 +1,5 @@
-import axios from 'axios'; // Importa a biblioteca axios para fazer requisições HTTP
+import axios from 'axios';
+import { getAuthHeaders } from './utils/auth'; // Função centralizada para obter cabeçalhos de autenticação
 
 // Define a URL base para as requisições relacionadas a missões
 const API_URL = 'http://localhost:5000/api/missoes';
@@ -7,21 +8,13 @@ const missoesService = {
     // Função para criar uma nova missão
     criarMissao: async (missaoData) => {
         try {
-            const token = localStorage.getItem('token'); // Pegando o token do localStorage
-            
-            if (!token) {
-                throw new Error('Token de autenticação não encontrado');
-            }
-
             // Verificar se os dados necessários estão presentes
             if (!missaoData.descricao || !missaoData.valor_da_missao) {
                 throw new Error('Descrição e pontos de recompensa são obrigatórios!');
             }
 
             const response = await axios.post(API_URL, missaoData, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Enviando o token no cabeçalho
-                }
+                headers: getAuthHeaders()
             });
 
             return response.data; // Retorna os dados da resposta
@@ -34,17 +27,14 @@ const missoesService = {
     // Função para listar as missões de um usuário específico
     listarMissoes: async () => {
         try {
-            const token = localStorage.getItem('token'); 
-            const usuarioId = localStorage.getItem('usuario_id'); 
+            const usuarioId = localStorage.getItem('usuario_id'); // Obtém o ID do usuário do localStorage
 
             if (!usuarioId) {
                 throw new Error('ID do usuário não encontrado no localStorage');
             }
 
-            const response = await axios.get(`${API_URL}/${usuarioId}`, {  
-                headers: {
-                    Authorization: `Bearer ${token}` 
-                }
+            const response = await axios.get(`${API_URL}/${usuarioId}`, {
+                headers: getAuthHeaders()
             });
             return response.data;
         } catch (error) {
@@ -59,11 +49,8 @@ const missoesService = {
     // Função para remover uma missão específica
     removerMissao: async (missaoId) => {
         try {
-            const token = localStorage.getItem('token'); // Pegando o token do localStorage
             const response = await axios.delete(`${API_URL}/${missaoId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Enviando o token no cabeçalho
-                }
+                headers: getAuthHeaders()
             });
             return response.data; // Retorna os dados da resposta
         } catch (error) {
@@ -76,11 +63,8 @@ const missoesService = {
     // Função para concluir uma missão (excluir + atualizar pontos)
     concluirMissao: async (missaoId) => {
         try {
-            const token = localStorage.getItem('token'); 
             const response = await axios.put(`${API_URL}/concluir/${missaoId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: getAuthHeaders()
             });
     
             return response.data; // Retorna os dados da resposta

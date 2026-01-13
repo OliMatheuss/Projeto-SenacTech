@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { resgatarRecompensa } from '../services/recompensaService';
 
 const ResgatarRecompensa = () => {
-    const [recompensas, setRecompensas] = useState([]);
     const [mensagem, setMensagem] = useState('');
     const history = useHistory();
 
-    useEffect(() => {
-        // Buscar recompensas se necessário
-    }, []);
-
     const handleResgatar = async () => {
         try {
-            const resposta = await resgatarRecompensa();
-            setMensagem(resposta.mensagem);
-        } catch (error) {
+            const { mensagem } = await resgatarRecompensa();
+            setMensagem(mensagem);
+        } catch {
             setMensagem('Erro ao resgatar recompensa. Tente novamente.');
         }
     };
@@ -27,8 +22,16 @@ const ResgatarRecompensa = () => {
                 <button onClick={handleResgatar} className="btn btn-outline-success">
                     Resgatar Recompensa Aleatória
                 </button>
-                {mensagem && <p style={{ color: mensagem.includes('Erro') ? '#e74c3c' : '#28a745' }}>{mensagem}</p>}
-                <button onClick={() => history.push('/dashboard')} className="btn btn-outline-primary" style={{ marginTop: '20px' }}>
+                {mensagem && (
+                    <p style={{ color: mensagem.includes('Erro') ? '#e74c3c' : '#28a745' }}>
+                        {mensagem}
+                    </p>
+                )}
+                <button
+                    onClick={() => history.push('/dashboard')}
+                    className="btn btn-outline-primary"
+                    style={{ marginTop: '20px' }}
+                >
                     Voltar para o Dashboard
                 </button>
             </div>

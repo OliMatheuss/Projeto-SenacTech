@@ -1,12 +1,7 @@
 import axios from 'axios';
+import { getAuthHeaders } from './utils/auth'; // Função centralizada para obter cabeçalhos de autenticação
 
 const API_URL = 'http://localhost:5000/api/recompensa';
-
-// Obtendo o token do localStorage
-const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return { Authorization: `Bearer ${token}` };
-};
 
 // Criar uma nova recompensa
 const criarRecompensa = async (descricao, pontos) => {
