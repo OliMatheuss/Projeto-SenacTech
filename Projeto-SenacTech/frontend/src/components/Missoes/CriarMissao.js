@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import missoesService from '../../services/missoesService';
+import '../../styles/missoes.css';
 
 const CriarMissao = () => {
     const [descricao, setDescricao] = useState('');

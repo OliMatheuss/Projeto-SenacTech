@@ -1,1 +1,20 @@
+/* Estilos globais para padronizar fontes */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
 /* Estilos específicos para Dashboard, se necessário. Estilos globais movidos para index.css */
+.dashboard-container {
+    padding: 20px;
+}
+
+.dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dashboard-content {
+    line-height: 1.5;
+}

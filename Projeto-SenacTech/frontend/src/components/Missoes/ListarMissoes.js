@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import missoesService from '../../services/missoesService';
+import "../../styles/missoes.css";
 
 const ListarMissoes = () => {
     const [missoes, setMissoes] = useState([]);

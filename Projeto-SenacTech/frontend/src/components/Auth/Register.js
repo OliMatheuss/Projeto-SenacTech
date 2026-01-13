@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import authService from '../../services/authService';
+import '../../styles/auth.css';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -41,68 +42,54 @@ const Register = () => {
 
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-            <div className="card p-4" style={{ maxWidth: '450px', width: '100%' }}>
-            <h2 className="page-title">Register</h2>
-
-                {error && <div className="alert alert-danger">{error}</div>}
-
-                <form onSubmit={handleRegister}>
-                    <div className="mb-3">
-                        <label className="form-label">Nome de Usuário:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Email:</label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Senha:</label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            value={senha}
-                            onChange={(e) => setSenha(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Confirmar Senha:</label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            value={confirmarSenha}
-                            onChange={(e) => setConfirmarSenha(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <button type="submit" className="btn btn-primary w-100">
-                        Registrar
-                    </button>
-                </form>
-
-                <button
-                    onClick={handleVoltarHome}
-                    className="btn btn-outline-secondary w-100 mt-3"
-                >
+            <form className="card p-4" style={{ width: '100%', maxWidth: '400px' }} onSubmit={handleRegister}>
+                <h2 className="text-center mb-4">Registrar</h2>
+                {error && <p className="text-danger text-center">{error}</p>}
+                <div className="form-group">
+                    <label>Nome de Usuário</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Digite seu nome de usuário"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        placeholder="Digite seu email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Senha</label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Digite sua senha"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Confirmar Senha</label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Confirme sua senha"
+                        value={confirmarSenha}
+                        onChange={(e) => setConfirmarSenha(e.target.value)}
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block mt-3">Registrar</button>
+                <button type="button" onClick={handleVoltarHome} className="btn btn-secondary btn-block mt-2">
                     Voltar para Home
                 </button>
-            </div>
+            </form>
         </div>
     );
 };

@@ -53,7 +53,7 @@ O banco de dados deve ser configurado conforme a estrutura definida no projeto. 
 4. Configure o arquivo `.env` com as credenciais do banco de dados.
 5. Inicie o servidor com o comando:
    ```
-   npm start
+   node src/app.js
    ```
 
 ## Conclusão

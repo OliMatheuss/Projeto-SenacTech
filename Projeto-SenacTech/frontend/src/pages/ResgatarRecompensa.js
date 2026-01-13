@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { resgatarRecompensa } from '../services/recompensaService';
+import '../styles/resgatarRecompensa.css';
 
 const ResgatarRecompensa = () => {
     const [mensagem, setMensagem] = useState('');
