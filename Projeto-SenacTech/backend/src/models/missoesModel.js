@@ -1,27 +1,47 @@
-// backend/src/models/missoesModel.js
 const db = require('../config/db');
 
 const Missoes = {
-    create: (usuario_id, descricao, pontos_recompensa = 100, data_conclusao = null, concluida = 0) => {
+    create: (usuario_id, descricao, pontos_recompensa = 100) => {
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO missoes (usuario_id, descricao, pontos_recompensa, data_conclusao, concluida) VALUES (?, ?, ?, ?, ?)';
-            db.query(query, [usuario_id, descricao, pontos_recompensa, data_conclusao, concluida], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results.insertId);
+            const query = `
+                INSERT INTO missoes
+                (usuario_id, descricao, pontos_recompensa, concluida)
+                VALUES (?, ?, ?, 0)
+            `;
+            db.query(query, [usuario_id, descricao, pontos_recompensa], (err, res) => {
+                if (err) return reject(err);
+                resolve(res.insertId);
             });
         });
     },
 
     findByUserId: (usuario_id) => {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM missoes WHERE usuario_id = ?';
-            db.query(query, [usuario_id], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results);
+            const query = `
+                SELECT *
+                FROM missoes
+                WHERE usuario_id = ?
+                AND concluida = 0
+                ORDER BY id DESC
+            `;
+            db.query(query, [usuario_id], (err, res) => {
+                if (err) return reject(err);
+                resolve(res);
+            });
+        });
+    },
+
+    concluir: (id) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                UPDATE missoes
+                SET concluida = 1,
+                    data_conclusao = NOW()
+                WHERE id = ?
+            `;
+            db.query(query, [id], (err, res) => {
+                if (err) return reject(err);
+                resolve(res.affectedRows);
             });
         });
     },
@@ -29,29 +49,12 @@ const Missoes = {
     delete: (id) => {
         return new Promise((resolve, reject) => {
             const query = 'DELETE FROM missoes WHERE id = ?';
-            db.query(query, [id], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results.affectedRows);
-            });
-        });
-    },
-    
-    concluir: (id) => {
-        return new Promise((resolve, reject) => {
-            const query = 'UPDATE missoes SET concluida = 1, data_conclusao = NOW() WHERE id = ?';
-            db.query(query, [id], (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(results.affectedRows);
+            db.query(query, [id], (err, res) => {
+                if (err) return reject(err);
+                resolve(res.affectedRows);
             });
         });
     }
-
-    
 };
-
 
 module.exports = Missoes;

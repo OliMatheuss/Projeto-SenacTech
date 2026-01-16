@@ -1,36 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import missoesService from '../../services/missoesService';
+import AuthContext from '../../contexts/AuthContext';
 import "../../styles/missoes.css";
 
 const ListarMissoes = () => {
     const [missoes, setMissoes] = useState([]);
     const [mensagem, setMensagem] = useState('');
-    const [nomeUsuario, setNomeUsuario] = useState('');
-    const [pontosUsuario, setPontosUsuario] = useState(0);
     const history = useHistory();
 
-    // Carrega dados do usuário e missões ao iniciar
+    const { user, fetchUserFromAPI } = useContext(AuthContext);
+
+    // Carrega missões
     useEffect(() => {
-        carregarDadosUsuario();
         carregarMissoes();
     }, []);
 
-    // Temporizador para limpar mensagens
+    // Limpa mensagem após 3s
     useEffect(() => {
         if (mensagem) {
             const timer = setTimeout(() => setMensagem(''), 3000);
             return () => clearTimeout(timer);
         }
     }, [mensagem]);
-
-    const carregarDadosUsuario = () => {
-        const nome = localStorage.getItem('username') ?? 'Usuário';
-        const pontos = Number(localStorage.getItem('pontos')) || 0;
-
-        setNomeUsuario(nome);
-        setPontosUsuario(pontos);
-    };
 
     const carregarMissoes = async () => {
         try {
@@ -43,8 +35,11 @@ const ListarMissoes = () => {
 
     const concluirMissao = async (missaoId, pontosRecompensa) => {
         try {
-            await missoesService.concluirMissao(missaoId, pontosRecompensa);
-            setMissoes(missoes.filter(missao => missao.id !== missaoId));
+            await missoesService.concluirMissao(missaoId);
+            setMissoes(prev =>
+                prev.filter(missao => missao.id !== missaoId)
+            );
+            await fetchUserFromAPI(); // 🔥 atualiza pontos reais
             setMensagem(`Missão concluída! Você ganhou ${pontosRecompensa} pontos.`);
         } catch (error) {
             console.error('Erro ao concluir missão:', error);
@@ -55,7 +50,9 @@ const ListarMissoes = () => {
     const excluirMissao = async (missaoId) => {
         try {
             await missoesService.removerMissao(missaoId);
-            setMissoes(missoes.filter(missao => missao.id !== missaoId));
+            setMissoes(prev =>
+                prev.filter(missao => missao.id !== missaoId)
+            );
             setMensagem('Missão excluída com sucesso.');
         } catch (error) {
             console.error('Erro ao excluir missão:', error);
@@ -68,94 +65,74 @@ const ListarMissoes = () => {
             <div className="card">
                 <h1>Lista de Missões</h1>
 
-            {/* Informações do usuário - AGORA NO TOPO */}
-            <div
-                className="text-center mb-4 p-3 rounded"
-                style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    color: '#fffbe7',
-                    fontWeight: 'bold',
-                    fontSize: '1.3rem',
-                    textShadow: '1px 1px 4px rgba(0,0,0,0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
-                }}
-            >
-                Olá, {nomeUsuario}! Você tem{' '}
-                <span style={{ textDecoration: 'underline', fontSize: '1.5rem', color: '#ffe066' }}>
-                    {pontosUsuario}
-                </span>{' '}
-                pontos!
-            </div>
+                {/* Usuário */}
+                {user && (
+                    <div className="text-center mb-4 p-3 rounded"
+                        style={{
+                            background: 'rgba(0, 0, 0, 0.4)',
+                            color: '#fffbe7',
+                            fontWeight: 'bold',
+                            fontSize: '1.3rem'
+                        }}
+                    >
+                        Olá, {user.username}! Você tem{' '}
+                        <span style={{ color: '#ffe066', fontSize: '1.5rem' }}>
+                            {user.pontos}
+                        </span>{' '}
+                        pontos
+                    </div>
+                )}
 
+                {/* Mensagem */}
+                {mensagem && (
+                    <div className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}>
+                        {mensagem}
+                    </div>
+                )}
 
-            {/* Mensagem de sucesso ou erro */}
-            {mensagem && (
-                <div className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}>
-                    {mensagem}
-                </div>
-            )}
+                {/* Lista */}
+                {missoes.length === 0 ? (
+                    <p className="text-center">Nenhuma missão cadastrada no momento.</p>
+                ) : (
+                    <ul className="list-group">
+                        {missoes.map(missao => (
+                            <li key={missao.id}
+                                className="list-group-item d-flex justify-content-between align-items-center"
+                                style={{
+                                    background: 'rgba(0, 0, 0, 0.5)',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    marginBottom: '10px',
+                                    color: '#fff'
+                                }}
+                            >
+                                <div>
+                                    <strong>{missao.descricao}</strong><br />
+                                    <small>{missao.pontos_recompensa} pontos</small>
+                                </div>
 
-            {/* Lista de missões */}
-            {missoes.length === 0 ? (
-                <p className="text-center">Nenhuma missão cadastrada no momento.</p>
-            ) : (
-                <ul className="list-group">
-                    {missoes.map(missao => (
-                        <li
-                            key={missao.id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                            style={{
-                                background: 'rgba(0, 0, 0, 0.5)',
-                                border: 'none',
-                                borderRadius: '15px',
-                                color: '#fff',
-                                textShadow: '1px 1px 2px rgba(0,0,0,0.6)',
-                                marginBottom: '10px',
-                                padding: '15px'
-                            }}
-                        >
-                            <div>
-                                <strong style={{ fontSize: '1.1rem' }}>{missao.descricao}</strong> <br />
-                                <small style={{ color: '#ffcc66' }}>{missao.pontos_recompensa} pontos</small>
-                            </div>
-                            <div className="btn-group">
-                                <button
-                                    onClick={() => concluirMissao(missao.id, missao.pontos_recompensa)}
-                                    className="btn btn-sm"
-                                    style={{
-                                        backgroundColor: '#28a745',
-                                        border: 'none',
-                                        color: 'white',
-                                        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                                        borderRadius: '8px'
-                                    }}
-                                >
-                                    Concluir
-                                </button>
-                                <button
-                                    onClick={() => excluirMissao(missao.id)}
-                                    className="btn btn-sm ms-2"
-                                    style={{
-                                        backgroundColor: '#dc3545',
-                                        border: 'none',
-                                        color: 'white',
-                                        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                                        borderRadius: '8px'
-                                    }}
-                                >
-                                    Excluir
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                                <div className="btn-group">
+                                    <button
+                                        className="btn btn-success btn-sm"
+                                        onClick={() => concluirMissao(missao.id, missao.pontos_recompensa)}
+                                    >
+                                        Concluir
+                                    </button>
+                                    <button
+                                        className="btn btn-danger btn-sm ms-2"
+                                        onClick={() => excluirMissao(missao.id)}
+                                    >
+                                        Excluir
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
-                {/* Botão para voltar ao dashboard */}
                 <button
-                    onClick={() => history.push('/dashboard')}
                     className="btn btn-secondary w-100 mt-3"
+                    onClick={() => history.push('/dashboard')}
                 >
                     Voltar para o Dashboard
                 </button>
