@@ -45,6 +45,16 @@ criarRecompensa: async (descricao, pontos) => {
     } catch (error) {
         throw error.response?.data || 'Erro ao resgatar recompensa';
     }
+},
+
+// Resgatar uma recompensa específica por ID
+resgatarRecompensaPorId: async (id) => {
+    try {
+        const response = await axios.post(`${API_URL}/resgatar/${id}`, {}, { headers: getAuthHeaders() });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || 'Erro ao resgatar recompensa específica';
+    }
 }
 };
 export default recompensaService;

@@ -32,52 +32,52 @@ const recompensaController = {
         }
     },
 
-    removerRecompensa: async (req, res) => {
+        resgatarRecompensa: async (req, res) => {
         const usuario_id = req.user.id;
-        const recompensaId = req.params.id;
+        const { id } = req.params;
 
         try {
-            const recompensas = await Recompensa.findByUsuarioId(usuario_id);
-            const recompensa = recompensas.find(r => r.id == recompensaId);
+            const recompensa = await Recompensa.findByIdAndUsuarioId(id, usuario_id);
 
             if (!recompensa) {
-                return res.status(403).json({ message: 'Você não tem permissão para remover esta recompensa' });
+                return res.status(404).json({ message: 'Recompensa não encontrada.' });
             }
 
-            await Recompensa.delete(recompensaId);
-            return res.status(200).json({ message: 'Recompensa removida com sucesso' });
-        } catch (error) {
-            console.error('Erro ao remover recompensa:', error);
-            return res.status(500).json({ message: 'Erro ao remover recompensa' });
-        }
-    },
+            const pontosUsuario = await Usuario.findById(usuario_id);
 
-    resgatarRecompensa: async (req, res) => {
-        const usuario_id = req.user.id;
-
-        try {
-            const recompensas = await Recompensa.findByUsuarioId(usuario_id);
-            if (recompensas.length === 0) {
-                return res.status(404).json({ message: 'Nenhuma recompensa disponível para resgate' });
+            if (!pontosUsuario || pontosUsuario.pontos < recompensa.pontos_necessarios) {
+                return res.status(400).json({ message: 'Pontos insuficientes para resgatar a recompensa.' });
             }
 
-            const recompensaAleatoria = recompensas[Math.floor(Math.random() * recompensas.length)];
-            const pontosAtuais = await Usuario.getPontosUsuario(usuario_id);
+            const novosPontos = pontosUsuario.pontos - recompensa.pontos_necessarios;
+            await Usuario.atualizarPontos(usuario_id, novosPontos);
 
-            if (pontosAtuais < recompensaAleatoria.pontos) {
-                return res.status(400).json({ message: 'Pontos insuficientes para resgatar esta recompensa' });
-            }
+            await Recompensa.delete(id);
 
-            await Usuario.atualizarPontosUsuario(usuario_id, pontosAtuais - recompensaAleatoria.pontos);
-            await Recompensa.delete(recompensaAleatoria.id);
-
-            return res.status(200).json({ 
-                message: 'Recompensa resgatada com sucesso', 
-                recompensa: recompensaAleatoria 
-            });
+            return res.status(200).json({ message: 'Recompensa resgatada com sucesso!' });
         } catch (error) {
             console.error('Erro ao resgatar recompensa:', error);
             return res.status(500).json({ message: 'Erro ao resgatar recompensa' });
+        }
+    },
+
+    removerRecompensa: async (req, res) => {
+        const usuario_id = req.user.id;
+        const { id } = req.params;
+
+        try {
+            const recompensa = await Recompensa.findByIdAndUsuarioId(id, usuario_id);
+
+            if (!recompensa) {
+                return res.status(404).json({ message: 'Recompensa não encontrada ou não pertence ao usuário.' });
+            }
+
+            await Recompensa.delete(id);
+
+            return res.status(200).json({ message: 'Recompensa removida com sucesso.' });
+        } catch (error) {
+            console.error('Erro ao remover recompensa:', error);
+            return res.status(500).json({ message: 'Erro ao remover recompensa' });
         }
     }
 };

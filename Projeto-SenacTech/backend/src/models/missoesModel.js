@@ -54,7 +54,21 @@ const Missoes = {
                 resolve(res.affectedRows);
             });
         });
-    }
+    },
+
+    findByIdAndUserId: (id, usuario_id) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT *
+                FROM missoes
+                WHERE id = ? AND usuario_id = ?
+            `;
+            db.query(query, [id, usuario_id], (err, res) => {
+                if (err) return reject(err);
+                resolve(res[0]); // Retorna apenas a primeira missão encontrada
+            });
+        });
+    },
 };
 
 module.exports = Missoes;

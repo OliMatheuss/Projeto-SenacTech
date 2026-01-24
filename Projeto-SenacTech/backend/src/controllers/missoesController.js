@@ -1,5 +1,5 @@
 const MissoesModel = require('../models/missoesModel');
-const Usuario = require('../models/usuarioModel'); // Adicionando a importação correta
+const Usuario = require('../models/usuarioModel');
 
 /**
  * Cria uma nova missão para o usuário logado
@@ -7,9 +7,9 @@ const Usuario = require('../models/usuarioModel'); // Adicionando a importação
 const criarMissao = async (req, res) => {
     // Pega o ID do usuário do token JWT (autenticação)
     const usuario_id = req.user.id; 
-    const { descricao, pontos_recompensa = 100, data_conclusao = null } = req.body;
+    const { descricao, pontos_recompensa = 100 } = req.body;
 
-    console.log(`Criando missão para usuário ${usuario_id}`, { usuario_id, descricao, pontos_recompensa, data_conclusao });
+    console.log(`Criando missão para usuário ${usuario_id}`, { usuario_id, descricao, pontos_recompensa });
 
     if (!descricao) {
         return res.status(400).json({ 
@@ -19,22 +19,11 @@ const criarMissao = async (req, res) => {
     }
 
     try {
-        // Chamada corrigida: passar os argumentos diretamente, e não um objeto
-        const missaoCriada = await MissoesModel.create(usuario_id, descricao, pontos_recompensa, data_conclusao, 0);
-
-        res.status(201).json({
-            success: true,
-            data: missaoCriada,
-            message: 'Missão criada com sucesso!'
-        });
-
+        const missaoId = await MissoesModel.create(usuario_id, descricao, pontos_recompensa);
+        return res.status(201).json({ message: 'Missão criada com sucesso', id: missaoId });
     } catch (error) {
         console.error('Erro ao criar missão:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erro interno ao criar missão',
-            error: process.env.NODE_ENV === 'development' ? error : {}
-        });
+        return res.status(500).json({ message: 'Erro ao criar missão' });
     }
 };
 
@@ -44,25 +33,14 @@ const criarMissao = async (req, res) => {
  * Lista todas as missões do usuário logado
  */
 const listarMissoes = async (req, res) => {
+    const usuario_id = req.user.id;
+
     try {
-        console.log('Parâmetro recebido:', req.params);  // Verifica se o parâmetro está vindo corretamente
-
-        const { id } = req.params;  // Pega o ID do usuário da URL
-        if (!id) {
-            return res.status(400).json({ message: "ID do usuário é obrigatório" });
-        }
-
-        // Chama a função findByUserId que foi definida no modelo
-        const missoes = await MissoesModel.findByUserId(id);
-
-        if (!missoes || missoes.length === 0) {
-            return res.status(404).json({ message: 'Nenhuma missão encontrada para esse usuário' });
-        }
-
-        res.status(200).json(missoes); // Retorna as missões encontradas
+        const missoes = await MissoesModel.findByUserId(usuario_id);
+        return res.status(200).json(missoes);
     } catch (error) {
-        console.error('Erro no controller:', error);
-        res.status(500).json({ message: 'Erro ao listar missões' });
+        console.error('Erro ao listar missões:', error);
+        return res.status(500).json({ message: 'Erro ao listar missões' });
     }
 };
 
@@ -108,50 +86,28 @@ const removerMissao = async (req, res) => {
         });
     }
 };
+// ...existing code...
 const concluirMissao = async (req, res) => {
-    const usuario_id = req.user.id; // ID do usuário autenticado
-    const { id } = req.params; // ID da missão
+    const { id } = req.params;
+    const usuario_id = req.user.id;
 
     try {
-        // Busca a missão para obter os pontos
-        const missoes = await MissoesModel.findByUserId(usuario_id);
-        const missaoEncontrada = missoes.find(m => m.id === parseInt(id));
+        const missao = await MissoesModel.findByIdAndUserId(id, usuario_id);
 
-        if (!missaoEncontrada) {
-            return res.status(404).json({
-                success: false,
-                message: 'Missão não encontrada ou não pertence ao usuário'
-            });
+        if (!missao) {
+            return res.status(404).json({ message: 'Missão não encontrada ou não pertence ao usuário.' });
         }
 
-        const pontosMissao = missaoEncontrada.pontos_recompensa;
+        await MissoesModel.concluir(id);
+        await Usuario.adicionarPontos(missao.usuario_id, missao.pontos_recompensa);
 
-        // Atualiza os pontos do usuário
-        await Usuario.adicionarPontos(usuario_id, pontosMissao);
-
-        // Exclui a missão após a conclusão
-        const resultado = await MissoesModel.delete(id);
-
-        if (resultado === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Erro ao concluir missão'
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'Missão concluída e pontos adicionados com sucesso'
-        });
-
+        return res.status(200).json({ message: 'Missão concluída com sucesso!' });
     } catch (error) {
         console.error('Erro ao concluir missão:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erro ao concluir missão'
-        });
+        return res.status(500).json({ message: 'Erro ao concluir missão' });
     }
 };
+
 
 
 

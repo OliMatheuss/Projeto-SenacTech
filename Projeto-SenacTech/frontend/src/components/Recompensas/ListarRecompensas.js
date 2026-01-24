@@ -35,14 +35,15 @@ const ListarRecompensas = () => {
         }
     };
 
-    const handleResgatar = async () => {
+    const handleResgatar = async (id) => {
         try {
-            const recompensa = await recompensaService.resgatarRecompensa();
+            const recompensa = await recompensaService.resgatarRecompensaPorId(id);
             setMensagem(`Recompensa resgatada: ${recompensa.descricao}`);
-            await fetchUserFromAPI(); // Atualiza os pontos do usuário
+            await fetchUserFromAPI(); // Atualiza os pontos reais do usuário
             carregarRecompensas();
         } catch (err) {
-            setMensagem('Erro ao resgatar recompensa: ' + err.message);
+            const errorMessage = err.response?.data?.message || 'Erro desconhecido ao resgatar recompensa';
+            setMensagem('Erro ao resgatar recompensa: ' + errorMessage);
         }
     };
 
@@ -119,7 +120,7 @@ const ListarRecompensas = () => {
                                 </div>
                                 <div>
                                     <button
-                                        onClick={() => handleResgatar()}
+                                        onClick={() => handleResgatar(recompensa.id)}
                                         className="btn btn-sm me-2"
                                         disabled={user.pontos < recompensa.pontos_necessarios}
                                         style={{

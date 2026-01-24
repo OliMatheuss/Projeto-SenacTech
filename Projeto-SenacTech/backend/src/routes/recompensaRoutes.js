@@ -14,6 +14,6 @@ router.get('/', autenticarUsuario, recompensaController.listarRecompensas);
 router.delete('/:id', autenticarUsuario, recompensaController.removerRecompensa);
 
 // Resgatar uma recompensa aleatória (só o próprio usuário pode resgatar)
-router.post('/resgatar', autenticarUsuario, recompensaController.resgatarRecompensa);
+router.post('/resgatar/:id', autenticarUsuario, recompensaController.resgatarRecompensa);
 
 module.exports = router;
