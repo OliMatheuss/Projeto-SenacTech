@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { listarRecompensas, resgatarRecompensa, removerRecompensa } from '../../services/recompensaService';
+import recompensaService from '../../services/recompensaService';
+import AuthContext from '../../contexts/AuthContext';
 
 const ListarRecompensas = () => {
     const [recompensas, setRecompensas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [mensagem, setMensagem] = useState('');
-    const [nomeUsuario, setNomeUsuario] = useState('');
-    const [pontosUsuario, setPontosUsuario] = useState(0);
     const history = useHistory();
 
+    const { user, fetchUserFromAPI } = useContext(AuthContext);
+
     useEffect(() => {
-        carregarDadosUsuario();
         carregarRecompensas();
     }, []);
 
@@ -23,18 +23,10 @@ const ListarRecompensas = () => {
         }
     }, [mensagem]);
 
-    const carregarDadosUsuario = () => {
-        const nome = localStorage.getItem('username') ?? 'Usuário';
-        const pontos = Number(localStorage.getItem('pontos')) || 0;
-
-        setNomeUsuario(nome);
-        setPontosUsuario(pontos);
-    };
-
     const carregarRecompensas = async () => {
         try {
             setLoading(true);
-            const data = await listarRecompensas();
+            const data = await recompensaService.listarRecompensas();
             setRecompensas(data);
         } catch (err) {
             setError(err.message);
@@ -45,8 +37,9 @@ const ListarRecompensas = () => {
 
     const handleResgatar = async () => {
         try {
-            const recompensa = await resgatarRecompensa(); // opcionalmente: resgatarRecompensa(id)
+            const recompensa = await recompensaService.resgatarRecompensa();
             setMensagem(`Recompensa resgatada: ${recompensa.descricao}`);
+            await fetchUserFromAPI(); // Atualiza os pontos do usuário
             carregarRecompensas();
         } catch (err) {
             setMensagem('Erro ao resgatar recompensa: ' + err.message);
@@ -56,7 +49,7 @@ const ListarRecompensas = () => {
     const handleExcluir = async (id) => {
         if (window.confirm("Tem certeza que deseja excluir esta recompensa?")) {
             try {
-                await removerRecompensa(id);
+                await recompensaService.removerRecompensa(id);
                 setMensagem('Recompensa excluída com sucesso!');
                 carregarRecompensas();
             } catch (err) {
@@ -73,89 +66,90 @@ const ListarRecompensas = () => {
             <div className="card">
                 <h1>Lista de Recompensas</h1>
 
-            {/* Info do usuário no topo */}
-            <div
-                className="text-center mb-4 p-3 rounded"
-                style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    color: '#fffbe7',
-                    fontWeight: 'bold',
-                    fontSize: '1.3rem',
-                    textShadow: '1px 1px 4px rgba(0,0,0,0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
-                }}
-            >
-                Olá, {nomeUsuario}! Você tem{' '}
-                <span style={{ textDecoration: 'underline', fontSize: '1.5rem', color: '#ffe066' }}>
-                    {pontosUsuario}
-                </span>{' '}
-                pontos!
-            </div>
+                {/* Info do usuário no topo */}
+                {user && (
+                    <div
+                        className="text-center mb-4 p-3 rounded"
+                        style={{
+                            background: 'rgba(0, 0, 0, 0.4)',
+                            color: '#fffbe7',
+                            fontWeight: 'bold',
+                            fontSize: '1.3rem',
+                            textShadow: '1px 1px 4px rgba(0,0,0,0.7)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+                        }}
+                    >
+                        Olá, {user.username}! Você tem{' '}
+                        <span style={{ textDecoration: 'underline', fontSize: '1.5rem', color: '#ffe066' }}>
+                            {user.pontos}
+                        </span>{' '}
+                        pontos!
+                    </div>
+                )}
 
+                {mensagem && (
+                    <div className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}>
+                        {mensagem}
+                    </div>
+                )}
 
-            {mensagem && (
-                <div className={`alert ${mensagem.includes('Erro') ? 'alert-danger' : 'alert-success'}`}>
-                    {mensagem}
-                </div>
-            )}
-
-            {/* Lista de recompensas */}
-            {recompensas.length === 0 ? (
-                <p className="text-center">Nenhuma recompensa cadastrada.</p>
-            ) : (
-                <ul className="list-group">
-                    {recompensas.map((recompensa) => (
-                        <li
-                            key={recompensa.id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                            style={{
-                                background: 'rgba(0, 0, 0, 0.5)',
-                                border: 'none',
-                                borderRadius: '15px',
-                                color: '#fff',
-                                textShadow: '1px 1px 2px rgba(0,0,0,0.6)',
-                                marginBottom: '10px',
-                                padding: '15px'
-                            }}
-                        >
-                            <div>
-                                <strong style={{ fontSize: '1.1rem' }}>{recompensa.descricao}</strong> <br />
-                                <small>Pontos necessários: {recompensa.pontos_necessarios}</small>
-                            </div>
-                            <div>
-                                <button
-                                    onClick={() => handleResgatar()}
-                                    className="btn btn-sm me-2"
-                                    disabled={pontosUsuario < recompensa.pontos_necessarios}
-                                    style={{
-                                        backgroundColor: pontosUsuario >= recompensa.pontos_necessarios ? '#28a745' : '#6c757d',
-                                        border: 'none',
-                                        color: 'white',
-                                        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                                        borderRadius: '8px'
-                                    }}
-                                >
-                                    Resgatar
-                                </button>
-                                <button
-                                    onClick={() => handleExcluir(recompensa.id)}
-                                    className="btn btn-sm"
-                                    style={{
-                                        backgroundColor: '#dc3545',
-                                        border: 'none',
-                                        color: 'white',
-                                        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                                        borderRadius: '8px'
-                                    }}
-                                >
-                                    Excluir
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                {/* Lista de recompensas */}
+                {recompensas.length === 0 ? (
+                    <p className="text-center">Nenhuma recompensa cadastrada.</p>
+                ) : (
+                    <ul className="list-group">
+                        {recompensas.map((recompensa) => (
+                            <li
+                                key={recompensa.id}
+                                className="list-group-item d-flex justify-content-between align-items-center"
+                                style={{
+                                    background: 'rgba(0, 0, 0, 0.5)',
+                                    border: 'none',
+                                    borderRadius: '15px',
+                                    color: '#fff',
+                                    textShadow: '1px 1px 2px rgba(0,0,0,0.6)',
+                                    marginBottom: '10px',
+                                    padding: '15px'
+                                }}
+                            >
+                                <div>
+                                    <strong style={{ fontSize: '1.1rem' }}>{recompensa.descricao}</strong> <br />
+                                    <small>Pontos necessários: {recompensa.pontos_necessarios}</small>
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={() => handleResgatar()}
+                                        className="btn btn-sm me-2"
+                                        disabled={user.pontos < recompensa.pontos_necessarios}
+                                        style={{
+                                            backgroundColor: user.pontos >= recompensa.pontos_necessarios ? '#28a745' : '#6c757d',
+                                            border: 'none',
+                                            color: 'white',
+                                            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                                            borderRadius: '8px'
+                                        }}
+                                    >
+                                        Resgatar
+                                    </button>
+                                    <button
+                                        onClick={() => handleExcluir(recompensa.id)}
+                                        className="btn btn-sm"
+                                        style={{
+                                            backgroundColor: '#dc3545',
+                                            border: 'none',
+                                            color: 'white',
+                                            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                                            borderRadius: '8px'
+                                        }}
+                                    >
+                                        Excluir
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
                 <button
                     onClick={() => history.push('/dashboard')}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { criarRecompensa } from '../../services/recompensaService';
+import recompensaService from '../../services/recompensaService';
 
 const CriarRecompensa = () => {
     const [descricao, setDescricao] = useState('');
@@ -24,7 +24,7 @@ const CriarRecompensa = () => {
         }
 
         try {
-            await criarRecompensa(descricao, pontos);
+            await recompensaService.criarRecompensa(descricao, pontos);
             setMensagem('Recompensa criada com sucesso!');
             setDescricao('');
             setPontos(0);

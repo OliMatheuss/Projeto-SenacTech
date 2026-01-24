@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { resgatarRecompensa } from '../services/recompensaService';
+import recompensaService from '../services/recompensaService';
 import '../styles/resgatarRecompensa.css';
 
 const ResgatarRecompensa = () => {
@@ -9,7 +9,7 @@ const ResgatarRecompensa = () => {
 
     const handleResgatar = async () => {
         try {
-            const { mensagem } = await resgatarRecompensa();
+            const { mensagem } = await recompensaService.resgatarRecompensa();
             setMensagem(mensagem);
         } catch {
             setMensagem('Erro ao resgatar recompensa. Tente novamente.');
